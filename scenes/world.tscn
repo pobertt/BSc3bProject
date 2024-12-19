@@ -1,14 +1,65 @@
-[gd_scene load_steps=3 format=3 uid="uid://bh3p15en1tas5"]
+[gd_scene load_steps=10 format=3 uid="uid://bh3p15en1tas5"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_n8uf6"]
 [ext_resource type="PackedScene" uid="uid://b338aq5nw8tnt" path="res://ui/multiplayerHUD.tscn" id="2_8c8ax"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ao8lu"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_5ldol"]
+sky_material = SubResource("ProceduralSkyMaterial_ao8lu")
+
+[sub_resource type="Environment" id="Environment_3y2lj"]
+background_mode = 2
+sky = SubResource("Sky_5ldol")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ieeq4"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ylba3"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_djl5f"]
+albedo_color = Color(0, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_60f5s"]
+
 [node name="world" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3y2lj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
 
 [node name="game_manager" type="Node" parent="."]
 script = ExtResource("1_n8uf6")
 
 [node name="multiplayerHUD" parent="." instance=ExtResource("2_8c8ax")]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
+spawn_path = NodePath("../player_spawn")
+
+[node name="player_spawn" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_ieeq4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_ylba3")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26966, -3.75885)
+material_override = SubResource("StandardMaterial3D_djl5f")
+mesh = SubResource("BoxMesh_60f5s")
 
 [connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/host_game" to="game_manager" method="host_game"]
 [connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/join_game" to="game_manager" method="join_game"]

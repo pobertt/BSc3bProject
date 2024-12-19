@@ -14,7 +14,7 @@ func host_game():
 	multiplayer.peer_connected.connect(add_player)
 	multiplayer.peer_disconnected.connect(remove_player)
 	
-	add_player(1)
+	add_player(multiplayer.get_unique_id())
 	
 func join_game():
 	print("starting join")

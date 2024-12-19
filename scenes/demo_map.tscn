@@ -1,5 +1,5 @@
 [gd_scene load_steps=2 format=3 uid="uid://bdhfimcxnse3t"]
 
-[ext_resource type="PackedScene" uid="uid://tl43jnfb72wf" path="res://assets/DemoMap.blend" id="1_rcx6n"]
+[ext_resource type="PackedScene" uid="uid://tl43jnfb72wf" path="res://assets/DemoMap.blend" id="1_4kw12"]
 
-[node name="DemoMap" instance=ExtResource("1_rcx6n")]
+[node name="DemoMap" instance=ExtResource("1_4kw12")]

@@ -1,3 +1,16 @@
-[gd_scene format=3 uid="uid://bh3p15en1tas5"]
+[gd_scene load_steps=3 format=3 uid="uid://bh3p15en1tas5"]
+
+[ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_n8uf6"]
+[ext_resource type="PackedScene" uid="uid://b338aq5nw8tnt" path="res://ui/multiplayerHUD.tscn" id="2_8c8ax"]
 
 [node name="world" type="Node3D"]
+
+[node name="game_manager" type="Node" parent="."]
+script = ExtResource("1_n8uf6")
+
+[node name="multiplayerHUD" parent="." instance=ExtResource("2_8c8ax")]
+
+[connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/host_game" to="game_manager" method="host_game"]
+[connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/join_game" to="game_manager" method="join_game"]
+
+[editable path="multiplayerHUD"]

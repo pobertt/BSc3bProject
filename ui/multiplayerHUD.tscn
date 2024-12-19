@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://b338aq5nw8tnt"]
+
+[node name="multiplayerHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -62.5
+offset_right = 85.0
+offset_bottom = 62.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -47.0
+offset_top = -50.5
+offset_right = 47.0
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="host_game" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Host Game
+"
+
+[node name="join_game" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="address_entry" type="LineEdit" parent="Panel/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter IP Address"

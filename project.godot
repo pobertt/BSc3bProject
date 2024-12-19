@@ -11,5 +11,14 @@ config_version=5
 [application]
 
 config/name="BSc3bProject"
+run/main_scene="res://scenes/world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+MultiplayerManager="*res://scripts/multiplayer/multiplayer_manager.gd"
+
+[display]
+
+window/size/always_on_top=true

@@ -25,7 +25,6 @@ func join_game():
 
 func add_player(peer_id: int):
 	print("adding player %s" % peer_id)
-	
 	var player = Player.instantiate()
 	player.player_id = peer_id
 	player.name = str(peer_id)

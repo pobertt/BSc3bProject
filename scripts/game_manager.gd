@@ -1,15 +1,16 @@
 extends Node
 
-@onready var multiplayer_hud: Control = $"../multiplayerHUD"
+@onready var main_menu: Control = $"../main_menu"
+
 
 #signals for join and host game buttons, maybe move this out into a seperate ui script??
 func host_game():
 	print("host button pressed")
-	multiplayer_hud.hide()
-	#Calling autoload script
+	main_menu.hide()
+	# Calling autoload script.
 	MultiplayerManager.host_game()
 	
 func join_game():
 	print("join button pressed")
-	multiplayer_hud.hide()
+	main_menu.hide()
 	MultiplayerManager.join_game()

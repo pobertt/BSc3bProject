@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bh3p15en1tas5"]
+[gd_scene load_steps=8 format=3 uid="uid://bh3p15en1tas5"]
 
+[ext_resource type="Script" path="res://scenes/world.gd" id="1_5r6bu"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_n8uf6"]
-[ext_resource type="PackedScene" uid="uid://b338aq5nw8tnt" path="res://ui/multiplayerHUD.tscn" id="2_8c8ax"]
+[ext_resource type="PackedScene" uid="uid://b338aq5nw8tnt" path="res://ui/main_menu.tscn" id="2_8c8ax"]
+[ext_resource type="PackedScene" uid="uid://bdhfimcxnse3t" path="res://scenes/demo_map.tscn" id="3_iwupb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ao8lu"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -16,17 +18,8 @@ sky = SubResource("Sky_5ldol")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ieeq4"]
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ylba3"]
-data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_djl5f"]
-albedo_color = Color(0, 1, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_60f5s"]
-
-[node name="world" type="Node3D"]
+[node name="world" type="Node"]
+script = ExtResource("1_5r6bu")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3y2lj")
@@ -35,33 +28,18 @@ environment = SubResource("Environment_3y2lj")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
+[node name="DemoMap" parent="." instance=ExtResource("3_iwupb")]
+
 [node name="game_manager" type="Node" parent="."]
 script = ExtResource("1_n8uf6")
 
-[node name="multiplayerHUD" parent="." instance=ExtResource("2_8c8ax")]
+[node name="main_menu" parent="." instance=ExtResource("2_8c8ax")]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
-spawn_path = NodePath("../player_spawn")
+spawn_path = NodePath("..")
 
-[node name="player_spawn" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[connection signal="pressed" from="main_menu/mainmenu_panel/MarginContainer/VBoxContainer/host_game" to="game_manager" method="host_game"]
+[connection signal="pressed" from="main_menu/mainmenu_panel/MarginContainer/VBoxContainer/join_game" to="game_manager" method="join_game"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
-mesh = SubResource("PlaneMesh_ieeq4")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_ylba3")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26966, -3.75885)
-material_override = SubResource("StandardMaterial3D_djl5f")
-mesh = SubResource("BoxMesh_60f5s")
-
-[connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/host_game" to="game_manager" method="host_game"]
-[connection signal="pressed" from="multiplayerHUD/Panel/VBoxContainer/join_game" to="game_manager" method="join_game"]
-
-[editable path="multiplayerHUD"]
+[editable path="main_menu"]

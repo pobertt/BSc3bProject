@@ -1,12 +1,24 @@
 extends CharacterBody3D
 
+@onready var camera: Camera3D = $Camera3D
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
+const SPEED = 10.0
+const JUMP_VELOCITY = 10.0
 
 @export var player_id := 1:
 	set(id):
 		player_id = id
+		
+func _ready():
+	# Capturing the mouse to the screen.
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+func _unhandled_input(event: InputEvent) -> void:
+	# Camera Rotation.
+	if event is InputEventMouseMotion:
+		rotate_y(-event.relative.x * .005)
+		camera.rotate_x(-event.relative.y * .005)
+		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -19,7 +31,7 @@ func _physics_process(delta: float) -> void:
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * SPEED

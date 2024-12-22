@@ -52,3 +52,19 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	
+	#for random spawn on death
+	#@rpc("any_peer")
+#func receive_damage():
+	#health -= 1
+	#if health <= 0:
+		#health = 3
+		#position = get_random_position_on_ground()
+#
+#And add a function
+#func get_random_position_on_ground():
+  #var x = randi() % map_width
+  #var y = randi() % map_height
+  #return Vector3(x, 0, y)
+#
+#0 - so that the player appears on the ground, and does not fall from the sky

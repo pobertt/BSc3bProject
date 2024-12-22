@@ -1,7 +1,6 @@
 extends Node
 
-@onready var main_menu: Control = $"../main_menu"
-
+@onready var main_menu: CanvasLayer = $"../main_menu"
 
 #signals for join and host game buttons, maybe move this out into a seperate ui script??
 func host_game():

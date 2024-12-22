@@ -6,7 +6,7 @@ const port = 9999
 const server_ip = "127.0.0.1"
 var enet_peer = ENetMultiplayerPeer.new()
 
-func host_game():
+func host_game() -> void:
 	print("starting host!")
 	
 	enet_peer.create_server(port)
@@ -16,7 +16,7 @@ func host_game():
 	
 	add_player(multiplayer.get_unique_id())
 	
-func join_game():
+func join_game() -> void:
 	print("starting join")
 	
 	var client_peer = enet_peer

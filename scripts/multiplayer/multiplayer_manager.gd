@@ -12,6 +12,7 @@ var players_spawn_node
 func host_game() -> void:
 	print("starting host!")
 	
+	# Grabbing the player_spawn from the world.tscn
 	players_spawn_node = get_tree().get_current_scene().get_node("player_spawn")
 	
 	enet_peer.create_server(port)
@@ -19,7 +20,8 @@ func host_game() -> void:
 	multiplayer.peer_connected.connect(add_player)
 	multiplayer.peer_disconnected.connect(remove_player)
 	
-	add_player(multiplayer.get_unique_id())
+	if not OS.has_feature("dedicated_server"):
+		add_player(multiplayer.get_unique_id())
 
 func join_game() -> void:
 	print("starting join")

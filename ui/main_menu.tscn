@@ -35,7 +35,3 @@ text = "Host Game
 [node name="join_game" type="Button" parent="mainmenu_panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Join Game"
-
-[node name="address_entry" type="LineEdit" parent="mainmenu_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-placeholder_text = "Enter IP Address"

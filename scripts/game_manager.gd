@@ -2,6 +2,11 @@ extends Node
 
 @onready var main_menu: CanvasLayer = $"../main_menu"
 
+func _ready():
+	if OS.has_feature("dedicated_server"):
+		print("Starting dedicated server...")
+		MultiplayerManager.host_game()
+
 #signals for join and host game buttons, maybe move this out into a seperate ui script??
 func host_game():
 	print("host button pressed")

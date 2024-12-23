@@ -7,12 +7,13 @@ func _ready():
 		print("Starting dedicated server...")
 		MultiplayerManager.host_game()
 
-#signals for join and host game buttons, maybe move this out into a seperate ui script??
+# Signals for host and join game buttons 
+# Host button main_menu.hide() and host_game() enabled during debug phase
 func host_game():
 	print("host button pressed")
-	#main_menu.hide()
+	main_menu.hide()
 	# Calling autoload script.
-	#MultiplayerManager.host_game()
+	MultiplayerManager.host_game()
 	
 func join_game():
 	print("join button pressed")

@@ -31,8 +31,8 @@ func _ready():
 		child.set_layer_mask_value(1, false)
 		child.set_layer_mask_value(2, true)
 		
-	# Camera is current for the correct player character.
-	# camera.current = true
+	#Camera is current for the correct player character.
+	camera.current = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return

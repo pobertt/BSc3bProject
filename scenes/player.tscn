@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_h6pqi"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_64kgy"]
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5tpj0"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_64kgy"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8ra58"]
 properties/0/path = NodePath(".:position")
@@ -13,7 +13,7 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("Camera3D:rotation")
+properties/2/path = NodePath("head/camera:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
@@ -21,16 +21,22 @@ properties/2/replication_mode = 1
 collision_layer = 2
 script = ExtResource("1_h6pqi")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_64kgy")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_5tpj0")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+[node name="world_model" type="Node3D" parent="."]
+
+[node name="mesh" type="MeshInstance3D" parent="world_model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_64kgy")
+skeleton = NodePath("../..")
+
+[node name="head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="camera" type="Camera3D" parent="head"]
+cull_mask = 1048573
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8ra58")

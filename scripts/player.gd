@@ -1,6 +1,16 @@
 extends CharacterBody3D
 
-@onready var camera: Camera3D = $Camera3D
+@onready var world_model: Node3D = $world_model
+@onready var head: Node3D = $head
+@onready var camera: Camera3D = $head/camera
+
+@export var look_sensitivity: float = 0.006
+@export var jump_velocity := 6.0
+@export var auto_bhop := true
+@export var walk_speed := 7.0
+@export var sprint_speed := 8.5
+
+var wish_dir := Vector3.ZERO
 
 const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
@@ -17,54 +27,57 @@ func _ready():
 	# Checking multiplayer authority.
 	if not is_multiplayer_authority(): return
 	
-	# Capturing the mouse to the screen.
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	for child in world_model.find_children("*", "VisualInstance3D"):
+		child.set_layer_mask_value(1, false)
+		child.set_layer_mask_value(2, true)
+		
 	# Camera is current for the correct player character.
-	camera.current = true
+	# camera.current = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
-	# Camera Rotation.
+	
 	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * .005)
-		camera.rotate_x(-event.relative.y * .005)
-		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+		# Capturing the mouse to the screen.
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	elif event.is_action_pressed("ui_cancel"):
+		# Making mouse visible when doing menus.
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		# Camera Rotation.
+		if event is InputEventMouseMotion:
+			# Left and right.
+			rotate_y(-event.relative.x * look_sensitivity)
+			# Up and down.
+			camera.rotate_x(-event.relative.y * look_sensitivity)
+			# Limited to looking down to feet and up to the sky. Otherwise it would rotate forever (back/frontflips)
+			camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+
+func _process(delta: float) -> void:
+	pass
+	
+func _handle_air_physics(delta: float) -> void:
+	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
+	
+func _handle_ground_physics(delta: float) -> void:
+	self.velocity.x = wish_dir.x * walk_speed
+	self.velocity.z = wish_dir.z * walk_speed
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
+	
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector("left", "right", "up", "down")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-
-	move_and_slide()
+	var input_dir := Input.get_vector("left", "right", "up", "down").normalized()
+	# Depending on which way you have your character facing, you may have to negate the input directions.
+	wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
 	
-	#for random spawn on death
-	#@rpc("any_peer")
-#func receive_damage():
-	#health -= 1
-	#if health <= 0:
-		#health = 3
-		#position = get_random_position_on_ground()
-#
-#And add a function
-#func get_random_position_on_ground():
-  #var x = randi() % map_width
-  #var y = randi() % map_height
-  #return Vector3(x, 0, y)
-#
-#0 - so that the player appears on the ground, and does not fall from the sky
+	if is_on_floor():
+		_handle_ground_physics(delta)
+	else:
+		_handle_air_physics(delta)
+	
+	move_and_slide()

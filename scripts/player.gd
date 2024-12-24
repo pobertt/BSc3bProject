@@ -4,6 +4,10 @@ extends CharacterBody3D
 @onready var head: Node3D = $head
 @onready var camera: Camera3D = $head/camera
 
+@export var player_id := 1:
+	set(id):
+		player_id = id
+
 @export var look_sensitivity: float = 0.006
 @export var jump_velocity := 6.0
 @export var auto_bhop := true
@@ -14,11 +18,12 @@ const HEADBOB_MOVE_AMOUNT = 0.06
 const HEADBOB_FREQUENCY = 2.4
 var headbob_time := 0.0
 
-var wish_dir := Vector3.ZERO
+# Air movement settings.
+@export var air_cap := 0.85 # Surf steeper ramps if higher
+@export var air_accel := 800.0
+@export var air_move_speed := 500.0
 
-@export var player_id := 1:
-	set(id):
-		player_id = id
+var wish_dir := Vector3.ZERO
 
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
@@ -90,7 +95,7 @@ func _physics_process(delta: float) -> void:
 	
 	if is_on_floor():
 		# Handle jump.
-		if Input.is_action_just_pressed("jump"):
+		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
 			self.velocity.y = jump_velocity
 		_handle_ground_physics(delta)
 	else:

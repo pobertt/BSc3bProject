@@ -1,22 +1,31 @@
 extends CharacterBody3D
 
+# References.
 @onready var world_model: Node3D = $world_model
 @onready var head: Node3D = $head
 @onready var camera: Camera3D = $head/camera
 
+# Multiplayer Player ID
 @export var player_id := 1:
 	set(id):
 		player_id = id
 
+# Player settings.
 @export var look_sensitivity: float = 0.006
 @export var jump_velocity := 6.0
 @export var auto_bhop := true
-@export var walk_speed := 7.0
-@export var sprint_speed := 8.5
 
+# Headbob settings.
 const HEADBOB_MOVE_AMOUNT = 0.06
 const HEADBOB_FREQUENCY = 2.4
 var headbob_time := 0.0
+
+# Ground movement settings.
+@export var walk_speed := 7.0
+@export var sprint_speed := 8.5
+@export var ground_accel := 14.0
+@export var ground_decel := 10.0
+@export var ground_friction := 6.0
 
 # Air movement settings.
 @export var air_cap := 0.85 # Surf steeper ramps if higher
@@ -80,9 +89,39 @@ func _process(delta: float) -> void:
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
 	
+	# Classic battle tested & fan favourite source/quake air movement recipe.
+	# Dot product is the measure of how much two vectors are pointing in the same direction.
+	var cur_speed_in_wish_dir = self.velocity.dot(wish_dir)
+	
+	# Wish speed (if wish_dir > 0 length) capped to the air_cap
+	var capped_speed = min((air_move_speed * wish_dir).length(), air_cap)
+	
+	# How much to get to the spped the player wishes (in the new dir).
+	# This allows for infinite speed. If wish_dir is perpendicular, we always need to add velocity no matter how fast we're going.
+	# This is what allows for things like bhop in CSS & Quake.
+	# Also happens to just give some very nice feeling movement & responsiveness when in the air.
+	var add_speed_till_cap = capped_speed - cur_speed_in_wish_dir
+	if add_speed_till_cap > 0:
+		var accel_speed = air_accel * air_move_speed * delta # Usually adding in this one.
+		accel_speed = min(accel_speed, add_speed_till_cap) # Works okay without this but sticking to classic game recipe.
+		self.velocity += accel_speed * wish_dir
+
 func _handle_ground_physics(delta: float) -> void:
-	self.velocity.x = wish_dir.x * _get_move_speed()
-	self.velocity.z = wish_dir.z * _get_move_speed()
+	# Similar to the air movement. Acceleration and friction on ground.
+	var cur_speed_in_wish_dir = self.velocity.dot(wish_dir)
+	var add_speed_till_cap = _get_move_speed() - cur_speed_in_wish_dir
+	if add_speed_till_cap > 0:
+		var accel_speed = ground_accel * delta * _get_move_speed()
+		accel_speed = min(accel_speed, add_speed_till_cap)
+		self.velocity += accel_speed * wish_dir
+		
+	# Apply friction. 
+	var control = max(self.velocity.length(), ground_decel)
+	var drop = control * ground_friction * delta
+	var new_speed = max(self.velocity.length() - drop, 0.0)
+	if self.velocity.length() > 0:
+		new_speed /= self.velocity.length()
+	self.velocity *= new_speed
 	
 	_headbob_effect(delta)
 

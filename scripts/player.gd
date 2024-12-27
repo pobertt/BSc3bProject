@@ -118,6 +118,10 @@ func _handle_crouch(delta: float) -> void:
 	
 	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
 	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
+	# For crouch visuals.
+	$world_model/mesh.mesh.height = $CollisionShape3D.shape.height
+	$world_model/mesh.position.y = $CollisionShape3D.position.y
+
 	
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta

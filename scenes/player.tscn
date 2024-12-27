@@ -32,10 +32,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_64kgy")
 skeleton = NodePath("../..")
 
-[node name="head" type="Node3D" parent="."]
+[node name="head_original_pos" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
 
-[node name="camera" type="Camera3D" parent="head"]
+[node name="head" type="Node3D" parent="head_original_pos"]
+
+[node name="camera" type="Camera3D" parent="head_original_pos/head"]
 cull_mask = 1048573
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

@@ -2,8 +2,8 @@ extends CharacterBody3D
 
 # References.
 @onready var world_model: Node3D = $world_model
-@onready var head: Node3D = $head
-@onready var camera: Camera3D = $head/camera
+@onready var head: Node3D = $head_original_pos/head
+@onready var camera: Camera3D = $head_original_pos/head/camera
 
 # Multiplayer Player ID
 @export var player_id := 1:
@@ -34,12 +34,19 @@ var headbob_time := 0.0
 
 var wish_dir := Vector3.ZERO
 
+# Crouch settings.
+const CROUCH_TRANSLATE = 0.7
+const CROUCH_JUMP_ADD = CROUCH_TRANSLATE * 0.9 # * 0.9 for sourcelike camera jitter in air on crouch, makes for a nice notifier
+var is_crouched := false
+
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 # More robust version of enabling sprint. 
 func _get_move_speed() -> float:
+	if is_crouched:
+		return walk_speed * 0.8
 	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
 func _ready():
@@ -86,6 +93,28 @@ func _headbob_effect(delta: float):
 func _process(delta: float) -> void:
 	pass
 	
+@onready var _original_capsule_height = $CollisionShape3D.shape.height
+func _handle_crouch(delta: float) -> void:
+	var was_crouched_last_frame = is_crouched
+	if Input.is_action_pressed("crouch"):
+		is_crouched = true
+	elif is_crouched and not self.test_move(self.transform, Vector3(0,CROUCH_TRANSLATE,0)):
+		is_crouched = false
+		
+	# Allow for crouch to heighgten/extend a jump.
+	var translate_y_if_possible := 0.0
+	if was_crouched_last_frame != is_crouched and not is_on_floor():
+		translate_y_if_possible = CROUCH_JUMP_ADD if is_crouched else -CROUCH_JUMP_ADD
+	# Make sure not to get player stuck in floor/ceiling during crouch jumps
+	if translate_y_if_possible != 0.0:
+		var result = KinematicCollision3D.new()
+		self.test_move(self.transform, Vector3(0,translate_y_if_possible,0), result)
+		self.position.y += result.get_travel().y
+	
+	head.position = Vector3(0, (-CROUCH_TRANSLATE if is_crouched else 0), 0)
+	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
+	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
+	
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
 	
@@ -131,6 +160,8 @@ func _physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("left", "right", "up", "down").normalized()
 	# Depending on which way you have your character facing, you may have to negate the input directions.
 	wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
+	
+	_handle_crouch(delta)
 	
 	if is_on_floor():
 		# Handle jump.

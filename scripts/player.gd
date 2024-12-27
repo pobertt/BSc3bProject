@@ -110,8 +110,12 @@ func _handle_crouch(delta: float) -> void:
 		var result = KinematicCollision3D.new()
 		self.test_move(self.transform, Vector3(0,translate_y_if_possible,0), result)
 		self.position.y += result.get_travel().y
+		# For camera smoothing.
+		head.position.y -= result.get_travel().y
+		head.position.y = clampf(head.position.y, -CROUCH_TRANSLATE, 0)
+	# Also for camera smoothing.
+	head.position.y = move_toward(head.position.y, -CROUCH_TRANSLATE if is_crouched else 0, 7.0 * delta)
 	
-	head.position = Vector3(0, (-CROUCH_TRANSLATE if is_crouched else 0), 0)
 	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
 	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
 	

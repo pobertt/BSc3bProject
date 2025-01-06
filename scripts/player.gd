@@ -53,9 +53,9 @@ func _ready():
 	# Checking multiplayer authority.
 	if not is_multiplayer_authority(): return
 	
-	for child in world_model.find_children("*", "VisualInstance3D"):
-		child.set_layer_mask_value(1, false)
-		child.set_layer_mask_value(2, true)
+	#for child in world_model.find_children("*", "VisualInstance3D"):
+		#child.set_layer_mask_value(1, false)
+		#child.set_layer_mask_value(2, true)
 		
 	#Camera is current for the correct player character.
 	camera.current = true
@@ -92,6 +92,7 @@ func _headbob_effect(delta: float):
 
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
+@rpc("any_peer")
 func _update_animations():
 	if not is_on_floor():
 		if is_crouched:

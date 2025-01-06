@@ -90,8 +90,31 @@ func _headbob_effect(delta: float):
 		0
 	)
 
+@onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
+@onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
+func _update_animations():
+	if not is_on_floor():
+		if is_crouched:
+			state_machine_playback.travel("MidJumpCrouch")
+		else:
+			state_machine_playback.travel("MidJump")
+		return
+	
+	var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
+	var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
+	
+	if is_crouched:
+		state_machine_playback.travel("CrouchBlendSpace2D")
+		animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
+	elif Input.is_action_pressed("sprint"):
+		state_machine_playback.travel("RunBlendSpace2D")
+		animation_tree.set("parameters/RunBlendSpace2D/blend_position", rel_vel_xz)
+	else:
+		state_machine_playback.travel("WalkBlendSpace2D")
+		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
+
 func _process(delta: float) -> void:
-	pass
+	_update_animations()
 	
 @onready var _original_capsule_height = $CollisionShape3D.shape.height
 func _handle_crouch(delta: float) -> void:
@@ -119,8 +142,8 @@ func _handle_crouch(delta: float) -> void:
 	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
 	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
 	# For crouch visuals.
-	$world_model/mesh.mesh.height = $CollisionShape3D.shape.height
-	$world_model/mesh.position.y = $CollisionShape3D.position.y
+	#$world_model/desert_droid_container.mesh.height = $CollisionShape3D.shape.height
+	#$world_model/desert_droid_container.position.y = $CollisionShape3D.position.y
 
 	
 func _handle_air_physics(delta: float) -> void:

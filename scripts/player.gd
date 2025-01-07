@@ -53,9 +53,9 @@ func _ready():
 	# Checking multiplayer authority.
 	if not is_multiplayer_authority(): return
 	
-	#for child in world_model.find_children("*", "VisualInstance3D"):
-		#child.set_layer_mask_value(1, false)
-		#child.set_layer_mask_value(2, true)
+	for child in world_model.find_children("*", "VisualInstance3D"):
+		child.set_layer_mask_value(1, false)
+		child.set_layer_mask_value(2, true)
 		
 	#Camera is current for the correct player character.
 	camera.current = true

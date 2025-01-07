@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://bh3p15en1tas5"]
 
-[ext_resource type="Script" path="res://scenes/world.gd" id="1_5r6bu"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_5r6bu"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_n8uf6"]
 [ext_resource type="PackedScene" uid="uid://b338aq5nw8tnt" path="res://ui/main_menu.tscn" id="2_8c8ax"]
-[ext_resource type="PackedScene" uid="uid://bdhfimcxnse3t" path="res://scenes/demo_map.tscn" id="3_iwupb"]
+[ext_resource type="PackedScene" uid="uid://bdhfimcxnse3t" path="res://scenes/maps/demo_map.tscn" id="3_iwupb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ao8lu"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

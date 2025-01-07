@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=4 format=3 uid="uid://ckkrc8102724r"]
+
+[ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_kypfg"]
+[ext_resource type="PackedScene" uid="uid://dk10ly8dtqcf6" path="res://assets/weapons_asset_pack/models/deagle - viewmodel.glb" id="2_amuxc"]
+[ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="3_bpjrl"]
+
+[resource]
+script = ExtResource("1_kypfg")
+view_model = ExtResource("2_amuxc")
+world_model = ExtResource("3_bpjrl")
+view_model_pos = Vector3(0.1, -0.25, 0.325)
+view_model_rot = Vector3(0, 3.14159, 0)
+view_model_scale = Vector3(1, 1, 1)
+world_model_pos = Vector3(-0.062, 0.317, 0.043)
+world_model_rot = Vector3(0.0436332, 2.22529, 1.44688)
+world_model_scale = Vector3(0.147, 0.147, 0.147)
+damage = 10

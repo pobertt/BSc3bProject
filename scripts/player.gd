@@ -90,9 +90,11 @@ func _headbob_effect(delta: float):
 		0
 	)
 
+@onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
+
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
-@rpc("any_peer")
+@rpc("call_local")
 func _update_animations():
 	if not is_on_floor():
 		if is_crouched:
@@ -115,7 +117,7 @@ func _update_animations():
 		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
 
 func _process(delta: float) -> void:
-	_update_animations()
+	pass
 	
 @onready var _original_capsule_height = $CollisionShape3D.shape.height
 func _handle_crouch(delta: float) -> void:
@@ -201,6 +203,8 @@ func _physics_process(delta: float) -> void:
 			self.velocity.y = jump_velocity
 		_handle_ground_physics(delta)
 	else:
-		_handle_air_physics(delta)
+		_handle_air_physics(delta)#
+		
+	_update_animations()
 	
 	move_and_slide()

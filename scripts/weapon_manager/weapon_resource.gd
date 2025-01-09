@@ -77,7 +77,6 @@ func _fire_shot():
 		var nrml = raycast.get_collision_normal()
 		var pt = raycast.get_collision_point()
 		
-		
 		if obj is RigidBody3D:
 			obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
 		

@@ -4,6 +4,7 @@ extends CharacterBody3D
 @onready var world_model: Node3D = $world_model
 @onready var head: Node3D = $head_original_pos/head
 @onready var camera: Camera3D = $head_original_pos/head/camera
+@onready var weapon_view_model: Node3D = $head_original_pos/head/camera/weapon_view_model
 
 # Multiplayer Player ID
 @export var player_id := 1:
@@ -39,6 +40,10 @@ const CROUCH_TRANSLATE = 0.7
 const CROUCH_JUMP_ADD = CROUCH_TRANSLATE * 0.9 # * 0.9 for sourcelike camera jitter in air on crouch, makes for a nice notifier
 var is_crouched := false
 
+# 
+const VIEW_MODEL_LAYER = 9
+const WORLD_MODEL_LAYER = 2
+
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
@@ -53,12 +58,28 @@ func _ready():
 	# Checking multiplayer authority.
 	if not is_multiplayer_authority(): return
 	
-	for child in world_model.find_children("*", "VisualInstance3D"):
-		child.set_layer_mask_value(1, false)
-		child.set_layer_mask_value(2, true)
-		
+	_update_view_and_world_model_masks()
+	
 	#Camera is current for the correct player character.
 	camera.current = true
+
+func _update_view_and_world_model_masks():
+	if not is_multiplayer_authority(): return
+	
+	# For some reason the @onready references do not work (a godot thing I don't understand (says it is a null value)) 
+	# Hiding character body from player. 
+	for child in $world_model.find_children("*", "VisualInstance3D", true, false):
+		child.set_layer_mask_value(1, false)
+		child.set_layer_mask_value(WORLD_MODEL_LAYER, true)
+	for child in $head_original_pos/head/camera/weapon_view_model.find_children("*", "VisualInstance3D", true, false):
+		child.set_layer_mask_value(1, false)
+		child.set_layer_mask_value(VIEW_MODEL_LAYER, true)
+		if child is GeometryInstance3D:
+			child.cast_shadow = false
+			
+	$head_original_pos/head/camera.set_cull_mask_value(WORLD_MODEL_LAYER, false)
+	# If I had a 3rd person camera.
+	#camera_third_person.set_cull_mask_value(VIEW_MODEL_LAYER, false)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
@@ -94,7 +115,8 @@ func _headbob_effect(delta: float):
 
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
-@rpc("call_local")
+
+# Something to do with blend spaces that dont let anims seen on multiplayer
 func _update_animations():
 	if not is_on_floor():
 		if is_crouched:

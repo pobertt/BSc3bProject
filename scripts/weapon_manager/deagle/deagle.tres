@@ -1,8 +1,11 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=4 format=3 uid="uid://ckkrc8102724r"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=7 format=3 uid="uid://ckkrc8102724r"]
 
 [ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_kypfg"]
+[ext_resource type="AudioStream" uid="uid://d3vi2o7bmt2yc" path="res://assets/weapons_asset_pack/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3" id="1_vmmbf"]
 [ext_resource type="PackedScene" uid="uid://dk10ly8dtqcf6" path="res://assets/weapons_asset_pack/models/deagle - viewmodel.glb" id="2_amuxc"]
 [ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="3_bpjrl"]
+[ext_resource type="AudioStream" uid="uid://d2lu16lp40dm0" path="res://assets/weapons_asset_pack/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav" id="3_kcpnx"]
+[ext_resource type="AudioStream" uid="uid://counu6xs7ni2t" path="res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav" id="4_1wkg8"]
 
 [resource]
 script = ExtResource("1_kypfg")
@@ -14,4 +17,11 @@ view_model_scale = Vector3(1, 1, 1)
 world_model_pos = Vector3(-0.062, 0.317, 0.043)
 world_model_rot = Vector3(0.0436332, 2.22529, 1.44688)
 world_model_scale = Vector3(0.147, 0.147, 0.147)
+view_idle_anim = "Idle"
+view_equip_anim = "Unholster"
+view_shoot_anim = "Shoot"
+view_reload_anim = "Reload"
 damage = 10
+shoot_sound = ExtResource("3_kcpnx")
+realod_sound = ExtResource("1_vmmbf")
+unholster_sound = ExtResource("4_1wkg8")

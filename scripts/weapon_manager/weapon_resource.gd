@@ -63,6 +63,7 @@ func _on_equip():
 func _on_unequip():
 	pass
 
+@rpc("call_local")
 func _fire_shot():
 	weapon_manager._play_sound(shoot_sound)
 	weapon_manager._play_anim(view_shoot_anim)
@@ -79,4 +80,8 @@ func _fire_shot():
 		
 		if obj is RigidBody3D:
 			obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
-		
+		if obj.has_method("take_damage"):
+			obj.take_damage(self.damage)
+		#var hit_player = raycast.get_collider()
+		#if hit_player.has_method("_recieve_damage"):
+			#hit_player._recieve_damage.rpc_id(hit_player.get_multiplayer_authority())

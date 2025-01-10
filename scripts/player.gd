@@ -15,6 +15,7 @@ extends CharacterBody3D
 @export var look_sensitivity: float = 0.006
 @export var jump_velocity := 6.0
 @export var auto_bhop := true
+@export var health = 100
 
 # Headbob settings.
 const HEADBOB_MOVE_AMOUNT = 0.06
@@ -110,6 +111,13 @@ func _headbob_effect(delta: float):
 		sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,
 		0
 	)
+
+@rpc("any_peer")
+func _recieve_damage():
+	health = health - 10
+	print(health)
+	if health <= 0:
+		self.queue_free()
 
 @onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
 

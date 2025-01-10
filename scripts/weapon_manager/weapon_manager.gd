@@ -66,12 +66,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			current_weapon.trigger_down = true
 		elif event.is_action_released("shoot"):
 			current_weapon.trigger_down = false
-			
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_update_weapon_model()
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

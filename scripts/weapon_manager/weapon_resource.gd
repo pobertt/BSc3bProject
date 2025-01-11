@@ -21,12 +21,20 @@ extends Resource
 # Sounds.
 
 @export var shoot_sound: AudioStream
-@export var realod_sound: AudioStream
+@export var reload_sound: AudioStream
 @export var unholster_sound: AudioStream
 
 # Weapon Logic.
 
 @export var damage = 10
+
+@export var current_ammo := INF
+@export var magazine_capacity := INF
+@export var reserve_ammo := INF
+@export var max_reserve_ammo := INF
+
+@export var auto_fire: bool = true
+@export var max_fire_rate_ms: float = 50
 
 const RAYCAST_DIST: float = 9999 # Too far seems to break it
 
@@ -50,8 +58,20 @@ var is_equipped := false:
 			else:
 				_on_unequip()
 
+var last_fire_time = -999999
+
+func _on_process(delta):
+	if trigger_down and auto_fire and Time.get_ticks_msec() - last_fire_time >= max_fire_rate_ms:
+		if current_ammo > 0:
+			_fire_shot()
+		else:
+			_reload_pressed()
+
 func _on_trigger_down():
-	_fire_shot()
+	if Time.get_ticks_msec() - last_fire_time > max_fire_rate_ms and current_ammo > 0:
+		_fire_shot()
+	elif current_ammo == 0:
+		_reload_pressed()
 
 func _on_trigger_up():
 	pass
@@ -62,6 +82,32 @@ func _on_equip():
 
 func _on_unequip():
 	pass
+
+func _get_amount_can_reload() -> int:
+	var wish_reload = magazine_capacity - current_ammo
+	var can_reload = min(wish_reload, reserve_ammo)
+	return can_reload
+
+func _reload_pressed():
+	if view_reload_anim and weapon_manager._get_anim() == view_reload_anim:
+		return
+	if _get_amount_can_reload() <= 0:
+		return
+	var cancel_cb = (func():
+		weapon_manager._stop_sounds())
+	weapon_manager._play_anim(view_reload_anim, _reload, cancel_cb)
+	weapon_manager._play_sound(reload_sound)
+	weapon_manager._queue_anim(view_idle_anim)
+
+func _reload():
+	var can_reload = _get_amount_can_reload()
+	if can_reload < 0:
+		return
+	elif magazine_capacity == INF or current_ammo == INF:
+		current_ammo = magazine_capacity
+	else:
+		current_ammo += can_reload
+		reserve_ammo += can_reload
 
 @rpc("call_local")
 func _fire_shot():
@@ -85,3 +131,6 @@ func _fire_shot():
 		#var hit_player = raycast.get_collider()
 		#if hit_player.has_method("_recieve_damage"):
 			#hit_player._recieve_damage.rpc_id(hit_player.get_multiplayer_authority())
+	
+	last_fire_time = Time.get_ticks_msec()
+	current_ammo -= 1

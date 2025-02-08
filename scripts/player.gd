@@ -233,7 +233,7 @@ func _physics_process(delta: float) -> void:
 			self.velocity.y = jump_velocity
 		_handle_ground_physics(delta)
 	else:
-		_handle_air_physics(delta)#
+		_handle_air_physics(delta)
 		
 	_update_animations()
 	

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl737iftkskwv"]
+
+[ext_resource type="Script" path="res://scripts/movement_manager/movement_manager.gd" id="1_r7udl"]
+
+[node name="movement_manager" type="Node3D"]
+script = ExtResource("1_r7udl")

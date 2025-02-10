@@ -1,6 +1,6 @@
 extends Node
 
-var Player = preload("res://scenes/player.tscn")
+var player_scene = preload("res://scenes/player.tscn")
 
 const port = 9999
 const server_ip = "127.0.0.1" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com"
@@ -32,7 +32,7 @@ func join_game() -> void:
 
 func add_player(peer_id: int):
 	print("adding player %s" % peer_id)
-	var player = Player.instantiate()
+	var player = player_scene.instantiate()
 	player.player_id = peer_id
 	player.name = str(peer_id)
 	

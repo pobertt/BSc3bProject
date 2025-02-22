@@ -17,7 +17,10 @@ var current_weapon_world_model: Node3D
 @onready var audio_stream_player: AudioStreamPlayer3D = $AudioStreamPlayer3D
 
 # Positioning weapon model. The data (pos, rot and scale) is input into the weapon resource, example: deagle.tres 
+@rpc("call_local")
 func _update_weapon_model() -> void:
+	if not is_multiplayer_authority(): return
+	
 	if current_weapon != null:
 		current_weapon.weapon_manager = self
 		if view_model_container and current_weapon.view_model:
@@ -54,6 +57,8 @@ var current_anim_finished_callback
 var current_anim_cancelled_callback
 
 func _play_anim(name: String, finished_callback = null, cancelled_callback = null):
+	if not is_multiplayer_authority(): return
+	
 	var anim_player: AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
 	
 	if last_played_anim and _get_anim() == last_played_anim and current_anim_cancelled_callback is Callable:
@@ -72,11 +77,15 @@ func _play_anim(name: String, finished_callback = null, cancelled_callback = nul
 	anim_player.play(name)
 
 func _queue_anim(name: String):
+	if not is_multiplayer_authority(): return
+	
 	var anim_player: AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
 	if not anim_player: return
 	anim_player.queue(name)
 
 func _current_anim_changed(new_anim: StringName):
+	if not is_multiplayer_authority(): return
+	
 	var anim_player: AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
 	if new_anim != last_played_anim and current_anim_finished_callback is Callable:
 		current_anim_finished_callback.call()
@@ -86,11 +95,14 @@ func _current_anim_changed(new_anim: StringName):
 		current_anim_cancelled_callback = null
 
 func _get_anim() -> String:
+	
 	var anim_player : AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
 	if not anim_player: return ""
 	return anim_player.current_animation
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_multiplayer_authority(): return
+	
 	if current_weapon and is_inside_tree():
 		if event.is_action_pressed("shoot") and allow_shoot:
 			current_weapon.trigger_down = true
@@ -103,9 +115,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if not is_multiplayer_authority(): return
+	
 	_update_weapon_model()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
+	
 	if current_weapon:
 		current_weapon._on_process(delta)

@@ -23,6 +23,7 @@ script/source = "extends RigidBody3D
 
 @export var health = 100
 
+@rpc
 func take_damage(amount: int):
 	health -= amount
 	print(health)

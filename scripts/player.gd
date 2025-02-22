@@ -8,6 +8,7 @@ extends CharacterBody3D
 @onready var weapon_view_model: Node3D = $head_original_pos/head/camera/weapon_view_model
 @onready var movement_manager: MovementManager = $movement_manager
 @onready var raycast: RayCast3D = $head_original_pos/head/camera/BulletRayCast3D
+@onready var weapon_manager: WeaponManager = $weapon_manager
 
 # Multiplayer Player ID
 @export var player_id := 1:
@@ -54,7 +55,7 @@ func _ready():
 	
 	_update_view_and_world_model_masks()
 	
-	#Camera is current for the correct player character.
+	# Camera is current for the correct player character.
 	camera.current = true
 	
 	movement_manager.init_movement_manager(self)
@@ -117,7 +118,6 @@ func _recieve_damage():
 	#health_changed.emit(health) for the UI health
 
 @onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
-
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 

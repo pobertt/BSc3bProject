@@ -109,7 +109,6 @@ func _reload():
 		current_ammo += can_reload
 		reserve_ammo += can_reload
 
-@rpc("call_local")
 func _fire_shot():
 	weapon_manager._play_sound(shoot_sound)
 	weapon_manager._play_anim(view_shoot_anim)
@@ -124,13 +123,16 @@ func _fire_shot():
 		var nrml = raycast.get_collision_normal()
 		var pt = raycast.get_collision_point()
 		
+		print(obj)
+		
 		if obj is RigidBody3D:
 			obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
 		if obj.has_method("take_damage"):
 			obj.take_damage(self.damage)
-		#var hit_player = raycast.get_collider()
-		#if hit_player.has_method("_recieve_damage"):
-			#hit_player._recieve_damage.rpc_id(hit_player.get_multiplayer_authority())
+		
+		if obj is CharacterBody3D and obj.has_method("_recieve_damage"):
+			obj._recieve_damage.rpc_id(obj.get_multiplayer_authority())
 	
+			
 	last_fire_time = Time.get_ticks_msec()
 	current_ammo -= 1

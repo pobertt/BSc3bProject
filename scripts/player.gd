@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $head_original_pos/head/camera
 @onready var weapon_view_model: Node3D = $head_original_pos/head/camera/weapon_view_model
 @onready var movement_manager: MovementManager = $movement_manager
+@onready var raycast: RayCast3D = $head_original_pos/head/camera/BulletRayCast3D
 
 # Multiplayer Player ID
 @export var player_id := 1:
@@ -108,10 +109,12 @@ func _headbob_effect(delta: float):
 
 @rpc("any_peer")
 func _recieve_damage():
-	health = health - 10
+	health -= 10
 	print(health)
 	if health <= 0:
-		self.queue_free()
+		health = 100
+		position = Vector3.ZERO
+	#health_changed.emit(health) for the UI health
 
 @onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
 

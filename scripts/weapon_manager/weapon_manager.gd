@@ -94,6 +94,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if current_weapon and is_inside_tree():
 		if event.is_action_pressed("shoot") and allow_shoot:
 			current_weapon.trigger_down = true
+			
 		elif event.is_action_released("shoot"):
 			current_weapon.trigger_down = false
 

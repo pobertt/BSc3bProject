@@ -1,7 +1,6 @@
 extends Node
 
 @onready var main_menu: Control = $"../CanvasLayer/main_menu"
-@onready var hud: Control = $"../CanvasLayer/HUD"
 
 func _ready():
 	if OS.has_feature("dedicated_server"):

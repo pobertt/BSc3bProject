@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody3D
 
+signal health_changed(health_value)
+
 # References.
 @onready var world_model: Node3D = $world_model
 @onready var head: Node3D = $head_original_pos/head
@@ -10,7 +12,7 @@ extends CharacterBody3D
 @onready var raycast: RayCast3D = $head_original_pos/head/camera/BulletRayCast3D
 @onready var weapon_manager: WeaponManager = $weapon_manager
 
-# Multiplayer Player ID
+# Multiplayer Player ID.
 @export var player_id := 1:
 	set(id):
 		player_id = id
@@ -60,6 +62,7 @@ func _ready():
 	
 	movement_manager.init_movement_manager(self)
 
+@rpc("call_local")
 func _update_view_and_world_model_masks():
 	if not is_multiplayer_authority(): return
 	
@@ -110,10 +113,12 @@ func _headbob_effect(delta: float):
 
 @rpc("any_peer")
 func _recieve_damage():
-	health -= 10
+	health -= weapon_manager.current_weapon.damage
 	print(health)
+	health_changed.emit(health)
 	if health <= 0:
 		health = 100
+		health_changed.emit(health)
 		position = Vector3.ZERO
 	#health_changed.emit(health) for the UI health
 
@@ -200,22 +205,17 @@ func _physics_process(delta: float) -> void:
 
 @rpc("call_local")
 func play_crouch_anim(is_crouched):
-	if not is_on_floor():
-		if is_crouched:
-			state_machine_playback.travel("MidJumpCrouch")
-		else:
-			state_machine_playback.travel("MidJump")
-		return
 
 	var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
 	var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
-	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
 	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
-
+	
 	if is_crouched:
+		$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE 
 		state_machine_playback.travel("CrouchBlendSpace2D")
 		animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
 	else:
+		$CollisionShape3D.shape.height = _original_capsule_height
 		state_machine_playback.travel("WalkBlendSpace2D")
 		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
 

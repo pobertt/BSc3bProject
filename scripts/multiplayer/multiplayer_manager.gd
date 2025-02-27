@@ -4,6 +4,7 @@ var player_scene = preload("res://scenes/player.tscn")
 
 const port = 9999
 const server_ip = "127.0.0.1" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com"
+# https://docs.google.com/document/d/1X4IDBqv88DmRfyXRnI6NJx0-Duj_UsSrP9up_GclNuc/edit?tab=t.0
 
 var enet_peer = ENetMultiplayerPeer.new()
 

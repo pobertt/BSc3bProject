@@ -56,6 +56,7 @@ var last_played_anim: String = ""
 var current_anim_finished_callback
 var current_anim_cancelled_callback
 
+@rpc("call_local")
 func _play_anim(name: String, finished_callback = null, cancelled_callback = null):
 	if not is_multiplayer_authority(): return
 	

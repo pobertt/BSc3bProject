@@ -149,7 +149,6 @@ func _handle_crouch(delta: float) -> void:
 	var was_crouched_last_frame = is_crouched
 	if Input.is_action_pressed("crouch"):
 		is_crouched = true
-		play_crouch_anim.rpc(is_crouched)
 	elif is_crouched and not self.test_move(self.transform, Vector3(0,CROUCH_TRANSLATE,0)):
 		is_crouched = false
 		play_crouch_anim.rpc(is_crouched)
@@ -191,19 +190,43 @@ func _physics_process(delta: float) -> void:
 		movement_manager._handle_air_physics(delta)
 		
 	#_update_animations.rpc()
+	if is_crouched:
+		play_crouch_anim.rpc(is_crouched)
+	else:
+		play_crouch_anim.rpc(is_crouched)
+		play_movement_anim.rpc()
 	
 	move_and_slide()
 
 @rpc("call_local")
 func play_crouch_anim(is_crouched):
+	if not is_on_floor():
+		if is_crouched:
+			state_machine_playback.travel("MidJumpCrouch")
+		else:
+			state_machine_playback.travel("MidJump")
+		return
+
 	var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
 	var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
 	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
 	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
-	
+
 	if is_crouched:
 		state_machine_playback.travel("CrouchBlendSpace2D")
 		animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
+	else:
+		state_machine_playback.travel("WalkBlendSpace2D")
+		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
+
+@rpc("call_local")
+func play_movement_anim():
+	var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
+	var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
+	
+	if Input.is_action_pressed("sprint"):
+		state_machine_playback.travel("RunBlendSpace2D")
+		animation_tree.set("parameters/RunBlendSpace2D/blend_position", rel_vel_xz)
 	else:
 		state_machine_playback.travel("WalkBlendSpace2D")
 		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)

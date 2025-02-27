@@ -50,8 +50,6 @@ shadow_enabled = true
 [node name="game_manager" type="Node" parent="."]
 script = ExtResource("1_n8uf6")
 
-[node name="main_menu" parent="." instance=ExtResource("2_8c8ax")]
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("../player_spawn")
@@ -73,7 +71,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.730708, 6.85094)
 mesh = SubResource("CapsuleMesh_s7glf")
 skeleton = NodePath("../..")
 
-[connection signal="pressed" from="main_menu/mainmenu_panel/MarginContainer/VBoxContainer/host_game" to="game_manager" method="host_game"]
-[connection signal="pressed" from="main_menu/mainmenu_panel/MarginContainer/VBoxContainer/join_game" to="game_manager" method="join_game"]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[editable path="main_menu"]
+[node name="main_menu" parent="CanvasLayer" instance=ExtResource("2_8c8ax")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="CanvasLayer/main_menu/mainmenu_panel/MarginContainer/VBoxContainer/host_game" to="game_manager" method="host_game"]
+[connection signal="pressed" from="CanvasLayer/main_menu/mainmenu_panel/MarginContainer/VBoxContainer/join_game" to="game_manager" method="join_game"]
+
+[editable path="CanvasLayer/main_menu"]

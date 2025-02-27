@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvorq7ugwsxkp"]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_7m5x5"]
+[ext_resource type="Texture2D" uid="uid://xa55k8o3neco" path="res://addons/kenney_particle_pack/rotated/flame_06_rotated.png" id="2_6ajrm"]
+
+[sub_resource type="GDScript" id="GDScript_113tf"]
+script/source = "extends Label
+"
+
+[node name="HUD" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_7m5x5")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = -343.0
+offset_right = 536.0
+offset_bottom = 169.0
+mouse_filter = 2
+texture = ExtResource("2_6ajrm")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+script = SubResource("GDScript_113tf")

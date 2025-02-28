@@ -229,6 +229,8 @@ func play_movement_anim():
 
 @rpc("any_peer")
 func _recieve_damage():
+	if not is_multiplayer_authority(): return
+	
 	health -= weapon_manager.current_weapon.damage
 	print(health)
 	if health <= 0:

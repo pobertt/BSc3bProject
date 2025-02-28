@@ -3,12 +3,14 @@ extends Control
 @export var player : Player
 @export var weapon_manager: WeaponManager
 @onready var label: Label = $Label
-@onready var health_bar: ProgressBar = $healthbar
+@export var health_bar: ProgressBar
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
-	print(self.get_tree().root)
+	
+	health_bar.show()
+	
 	player.health_changed.connect(update_health_bar)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

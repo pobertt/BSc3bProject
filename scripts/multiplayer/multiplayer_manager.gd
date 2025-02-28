@@ -10,6 +10,9 @@ var enet_peer = ENetMultiplayerPeer.new()
 
 var players_spawn_node
 
+@export var color : Array = [Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PURPLE, Color.ORANGE, Color.BLACK, Color.WHITE]
+var color_id = 0
+
 func host_game() -> void:
 	print("starting host!")
 	
@@ -38,10 +41,19 @@ func add_player(peer_id: int):
 	player.name = str(peer_id)
 	
 	players_spawn_node.add_child(player)
-	
+
 func remove_player(peer_id: int):
 	print("removed player %s" % peer_id)
 	
 	var player = get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
+
+@rpc("call_local")
+func set_colour(player):
+	var colour = color[color_id] as Color
+	player.robot_mat.duplicate()
+	player.robot_mat.albedo_color = colour
+	player.robot.set_surface_override_material(0, player.robot_mat)
+	color_id = color_id + 1
+	

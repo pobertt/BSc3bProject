@@ -8,6 +8,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
+	print(self.get_tree().root)
 	player.health_changed.connect(update_health_bar)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

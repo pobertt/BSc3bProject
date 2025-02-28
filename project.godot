@@ -22,6 +22,8 @@ Global="*res://scripts/autoload/global.gd"
 
 [display]
 
+window/size/viewport_width=600
+window/size/viewport_height=300
 window/size/initial_position_type=0
 window/size/always_on_top=true
 

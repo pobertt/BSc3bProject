@@ -11,6 +11,7 @@ signal health_changed(health_value)
 @onready var movement_manager: MovementManager = $movement_manager
 @onready var raycast: RayCast3D = $head_original_pos/head/camera/BulletRayCast3D
 @onready var weapon_manager: WeaponManager = $weapon_manager
+@export var robot: MeshInstance3D
 
 # Multiplayer Player ID.
 @export var player_id := 1:
@@ -21,7 +22,8 @@ signal health_changed(health_value)
 @export var look_sensitivity: float = 0.006
 @export var jump_velocity := 6.0
 @export var auto_bhop := true
-@export var health = 100
+@export var health := 100
+var robot_mat := StandardMaterial3D.new()
 
 # Headbob settings.
 const HEADBOB_MOVE_AMOUNT = 0.06
@@ -41,9 +43,14 @@ var is_crouched := false
 const VIEW_MODEL_LAYER = 9
 const WORLD_MODEL_LAYER = 2
 
+# Spawn pos.
+var spawn_positions = [Vector3(25, 2, 0), Vector3(0, 2, 25), Vector3(0, 2, -25), Vector3(-25, 2, 0)]
+
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
+	
+	MultiplayerManager.set_colour(self)
 
 # More robust version of enabling sprint. 
 func _get_move_speed() -> float:
@@ -110,17 +117,6 @@ func _headbob_effect(delta: float):
 		sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,
 		0
 	)
-
-@rpc("any_peer")
-func _recieve_damage():
-	health -= weapon_manager.current_weapon.damage
-	print(health)
-	health_changed.emit(health)
-	if health <= 0:
-		health = 100
-		health_changed.emit(health)
-		position = Vector3.ZERO
-	#health_changed.emit(health) for the UI health
 
 @onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
@@ -230,3 +226,16 @@ func play_movement_anim():
 	else:
 		state_machine_playback.travel("WalkBlendSpace2D")
 		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
+
+@rpc("any_peer")
+func _recieve_damage():
+	health -= weapon_manager.current_weapon.damage
+	print(health)
+	if health <= 0:
+		health = 100
+		dead()
+	health_changed.emit(health)
+
+func dead():
+	var new_pos = spawn_positions.pick_random()
+	position = new_pos

@@ -57,6 +57,7 @@ spawn_path = NodePath("../player_spawn")
 [node name="player_spawn" type="Node3D" parent="."]
 
 [node name="Node3D" type="Node3D" parent="."]
+visible = false
 
 [node name="RigidBody3D" type="RigidBody3D" parent="Node3D"]
 collision_layer = 2

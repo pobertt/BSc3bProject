@@ -107,7 +107,7 @@ func _reload():
 		current_ammo = magazine_capacity
 	else:
 		current_ammo += can_reload
-		reserve_ammo += can_reload
+		reserve_ammo -= can_reload
 
 func _fire_shot():
 	weapon_manager._play_sound(shoot_sound)

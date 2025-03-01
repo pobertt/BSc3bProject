@@ -31,6 +31,7 @@ text = "Main Menu"
 horizontal_alignment = 1
 
 [node name="host_game" type="Button" parent="mainmenu_panel/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Host Game
 "

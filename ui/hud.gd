@@ -6,6 +6,7 @@ extends Control
 @export var health_bar: ProgressBar
 @onready var damage_texture: TextureRect = $hurt_img
 @onready var hit_marker: TextureRect = $hit_marker
+@onready var reticle: ColorRect = $reticle
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -31,7 +32,9 @@ func update_health_bar(health_value):
 func update_hit_marker(hit):
 	print("being called")
 	if hit:
+		reticle.hide()
 		hit_marker.show()
 		await get_tree().create_timer(0.2).timeout
 		hit == false
+		reticle.show()
 		hit_marker.hide()

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_7m5x5"]
 [ext_resource type="Texture2D" uid="uid://bq4cxnb517n5i" path="res://ui/images/hurt_image.png" id="2_v5p6w"]
-[ext_resource type="Texture2D" uid="uid://t35k6i8r5egc" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="3_6ke7m"]
+[ext_resource type="Texture2D" uid="uid://d3vltgoqxqim4" path="res://ui/images/HITMARKER.png" id="3_62570"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -14,7 +14,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_7m5x5")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="reticle" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -69,10 +69,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_6ke7m")
+texture = ExtResource("3_62570")
+expand_mode = 1

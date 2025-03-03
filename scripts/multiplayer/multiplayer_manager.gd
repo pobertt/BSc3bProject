@@ -3,7 +3,7 @@ extends Node
 var player_scene = preload("res://scenes/player.tscn")
 
 const port = 9999
-const server_ip = "ec2-13-61-175-64.eu-north-1.compute.amazonaws.com" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com"
+const server_ip = "127.0.0.1" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com"
 # https://docs.google.com/document/d/1X4IDBqv88DmRfyXRnI6NJx0-Duj_UsSrP9up_GclNuc/edit?tab=t.0
 
 var enet_peer = ENetMultiplayerPeer.new()
@@ -46,7 +46,7 @@ func remove_player(peer_id: int):
 	print("removed player %s" % peer_id)
 	
 	var player = get_node_or_null(str(peer_id))
-	player.position = Vector3(0,50,0)
+	#player.position = Vector3(0,50,0)
 	if player:
 		player.robot_mat.hide()
 		player.queue_free()

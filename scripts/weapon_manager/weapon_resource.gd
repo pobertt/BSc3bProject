@@ -1,6 +1,8 @@
 class_name WeaponResource
 extends Resource
 
+signal hit_marker(player_hit)
+
 # Used for the first person perspective, when holding the gun. Will include hand models.
 @export var view_model: PackedScene
 # Used for when the weapon is in the player's hand or on the ground
@@ -132,7 +134,13 @@ func _fire_shot():
 		
 		if obj is CharacterBody3D and obj.has_method("_recieve_damage"):
 			obj._recieve_damage.rpc_id(obj.get_multiplayer_authority())
+		if obj is CharacterBody3D:
+			show_hit_marker()
 	
 			
 	last_fire_time = Time.get_ticks_msec()
 	current_ammo -= 1
+
+func show_hit_marker():
+	print("SHOW being called")
+	hit_marker.emit(true)

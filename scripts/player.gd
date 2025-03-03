@@ -12,6 +12,7 @@ signal health_changed(health_value)
 @onready var raycast: RayCast3D = $head_original_pos/head/camera/BulletRayCast3D
 @onready var weapon_manager: WeaponManager = $weapon_manager
 @export var robot: MeshInstance3D
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
 # Multiplayer Player ID.
 @export var player_id := 1:
@@ -122,31 +123,10 @@ func _headbob_effect(delta: float):
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 
-# Something to do with blend spaces that dont let anims seen on multiplayer
-#@rpc("call_local")
-#func _update_animations():
-	#if not is_on_floor():
-		#if is_crouched:
-			#state_machine_playback.travel("MidJumpCrouch")
-		#else:
-			#state_machine_playback.travel("MidJump")
-		#return
-	#
-	#var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
-	#var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
-	#
-	#if is_crouched:
-		#state_machine_playback.travel("CrouchBlendSpace2D")
-		#animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
-	#elif Input.is_action_pressed("sprint"):
-		#state_machine_playback.travel("RunBlendSpace2D")
-		#animation_tree.set("parameters/RunBlendSpace2D/blend_position", rel_vel_xz)
-	#else:
-		#state_machine_playback.travel("WalkBlendSpace2D")
-		#animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
-
 @onready var _original_capsule_height = $CollisionShape3D.shape.height
+@rpc("any_peer")
 func _handle_crouch(delta: float) -> void:
+	
 	var was_crouched_last_frame = is_crouched
 	if Input.is_action_pressed("crouch"):
 		is_crouched = true
@@ -173,45 +153,19 @@ func _handle_crouch(delta: float) -> void:
 	#$world_model/desert_droid_container.mesh.height = $CollisionShape3D.shape.height
 	#$world_model/desert_droid_container.position.y = $CollisionShape3D.position.y
 
-func _physics_process(delta: float) -> void:
-	if not is_multiplayer_authority(): return
-
-	var input_dir := Input.get_vector("left", "right", "up", "down").normalized()
-	# Depending on which way you have your character facing, you may have to negate the input directions.
-	movement_manager.wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
-	
-	_handle_crouch(delta)
-	
-	if is_on_floor():
-		# Handle jump.
-		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
-			self.velocity.y = jump_velocity
-		movement_manager._handle_ground_physics(delta)
-	else:
-		movement_manager._handle_air_physics(delta)
-		
-	#_update_animations.rpc()
-	if is_crouched:
-		play_crouch_anim.rpc(is_crouched)
-	else:
-		play_crouch_anim.rpc(is_crouched)
-		play_movement_anim.rpc()
-	
-	move_and_slide()
-
 @rpc("call_local")
 func play_crouch_anim(is_crouched):
-
 	var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
 	var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
-	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
+	collision_shape.position.y = collision_shape.shape.height / 2
 	
 	if is_crouched:
-		$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE 
+		print(player_id)
+		collision_shape.shape.height = _original_capsule_height - CROUCH_TRANSLATE 
 		state_machine_playback.travel("CrouchBlendSpace2D")
 		animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
 	else:
-		$CollisionShape3D.shape.height = _original_capsule_height
+		collision_shape.shape.height = _original_capsule_height
 		state_machine_playback.travel("WalkBlendSpace2D")
 		animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)
 
@@ -241,3 +195,52 @@ func _recieve_damage():
 func dead():
 	var new_pos = spawn_positions.pick_random()
 	position = new_pos
+
+func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
+
+	var input_dir := Input.get_vector("left", "right", "up", "down").normalized()
+	# Depending on which way you have your character facing, you may have to negate the input directions.
+	movement_manager.wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
+	
+	_handle_crouch.rpc(delta)
+	
+	if is_on_floor():
+		# Handle jump.
+		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
+			self.velocity.y = jump_velocity
+		movement_manager._handle_ground_physics(delta)
+	else:
+		movement_manager._handle_air_physics(delta)
+		
+	#_update_animations.rpc()
+	if is_crouched:
+		play_crouch_anim.rpc(is_crouched)
+	else:
+		play_crouch_anim.rpc(is_crouched)
+		play_movement_anim.rpc()
+	
+	move_and_slide()
+
+# Something to do with blend spaces that dont let anims seen on multiplayer
+#@rpc("call_local")
+#func _update_animations():
+	#if not is_on_floor():
+		#if is_crouched:
+			#state_machine_playback.travel("MidJumpCrouch")
+		#else:
+			#state_machine_playback.travel("MidJump")
+		#return
+	#
+	#var rel_vel = self.global_basis.inverse() * ((self.velocity * Vector3(1,0,1)) / _get_move_speed())
+	#var rel_vel_xz = Vector2(rel_vel.x, -rel_vel.z)
+	#
+	#if is_crouched:
+		#state_machine_playback.travel("CrouchBlendSpace2D")
+		#animation_tree.set("parameters/CrouchBlendSpace2D/blend_position", rel_vel_xz)
+	#elif Input.is_action_pressed("sprint"):
+		#state_machine_playback.travel("RunBlendSpace2D")
+		#animation_tree.set("parameters/RunBlendSpace2D/blend_position", rel_vel_xz)
+	#else:
+		#state_machine_playback.travel("WalkBlendSpace2D")
+		#animation_tree.set("parameters/WalkBlendSpace2D/blend_position", rel_vel_xz)

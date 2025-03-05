@@ -124,7 +124,6 @@ func _headbob_effect(delta: float):
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 
 @onready var _original_capsule_height = $CollisionShape3D.shape.height
-@rpc("any_peer")
 func _handle_crouch(delta: float) -> void:
 	
 	var was_crouched_last_frame = is_crouched
@@ -203,7 +202,7 @@ func _physics_process(delta: float) -> void:
 	# Depending on which way you have your character facing, you may have to negate the input directions.
 	movement_manager.wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
 	
-	_handle_crouch.rpc(delta)
+	_handle_crouch(delta)
 	
 	if is_on_floor():
 		# Handle jump.

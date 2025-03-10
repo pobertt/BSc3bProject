@@ -5,10 +5,6 @@ extends Node3D
 
 @export var current_weapon: WeaponResource
 
-# Gun resources
-@export var p90 : WeaponResource
-@export var deagle : WeaponResource
-
 @export var player : CharacterBody3D
 @export var bullet_ray_cast_3d: RayCast3D
 

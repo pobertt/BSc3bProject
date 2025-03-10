@@ -119,6 +119,8 @@ func _fire_shot():
 	weapon_manager._queue_anim(view_idle_anim)
 	
 	var raycast = weapon_manager.bullet_ray_cast_3d
+	raycast.rotation.x = weapon_manager.get_current_recoil().x
+	raycast.rotation.y = weapon_manager.get_current_recoil().y
 	raycast.target_position = Vector3(0,0, -abs(RAYCAST_DIST))
 	raycast.force_raycast_update()
 	

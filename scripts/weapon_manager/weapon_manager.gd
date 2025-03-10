@@ -105,11 +105,16 @@ var heat : float = 0.0
 func apply_recoil():
 	var spray_recoil := Vector2.ZERO
 	if current_weapon.spray_pattern:
-		spray_recoil = current_weapon.spray_pattern.get_point_position(int(heat) % current_weapon.spray_pattern.point_count) * 0.0002
-	var random_recoil := Vector2(randf_range(-1,1), randf_range(-1,1)) * 0.05
+		spray_recoil = current_weapon.spray_pattern.get_point_position(int(heat) % current_weapon.spray_pattern.point_count) * 0.0075
+		print(spray_recoil)
+		print(heat)
+	var random_recoil := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 0.01
 	var recoil = spray_recoil + random_recoil
 	player.add_recoil(-recoil.y, -recoil.x)
-	heat += 1.0
+	heat += 2.5
+
+func get_current_recoil():
+	return player.get_current_recoil() if player.has_method("get_current_recoil") else Vector2()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
@@ -132,7 +137,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if not is_multiplayer_authority(): return
 	
 	if current_weapon:
 		current_weapon._on_process(delta)

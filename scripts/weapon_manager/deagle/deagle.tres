@@ -1,16 +1,22 @@
 [gd_resource type="Resource" script_class="WeaponResource" load_steps=7 format=3 uid="uid://ckkrc8102724r"]
 
 [ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_kypfg"]
-[ext_resource type="AudioStream" uid="uid://d3vi2o7bmt2yc" path="res://assets/weapons_asset_pack/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3" id="1_vmmbf"]
-[ext_resource type="PackedScene" uid="uid://dk10ly8dtqcf6" path="res://assets/weapons_asset_pack/models/deagle - viewmodel.glb" id="2_amuxc"]
-[ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="3_bpjrl"]
-[ext_resource type="AudioStream" uid="uid://d2lu16lp40dm0" path="res://assets/weapons_asset_pack/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav" id="3_kcpnx"]
-[ext_resource type="AudioStream" uid="uid://counu6xs7ni2t" path="res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav" id="4_1wkg8"]
+[ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="2_nmmti"]
+[ext_resource type="PackedScene" uid="uid://dk10ly8dtqcf6" path="res://assets/weapons_asset_pack/models/deagle - viewmodel.glb" id="3_eh86w"]
+
+[sub_resource type="Resource" id="Resource_4dti6"]
+metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3"
+
+[sub_resource type="Resource" id="Resource_yua6x"]
+metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav"
+
+[sub_resource type="Resource" id="Resource_tnw6o"]
+metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav"
 
 [resource]
 script = ExtResource("1_kypfg")
-view_model = ExtResource("2_amuxc")
-world_model = ExtResource("3_bpjrl")
+view_model = ExtResource("3_eh86w")
+world_model = ExtResource("2_nmmti")
 view_model_pos = Vector3(0.1, -0.25, 0.325)
 view_model_rot = Vector3(0, 3.14159, 0)
 view_model_scale = Vector3(1, 1, 1)
@@ -21,13 +27,13 @@ view_idle_anim = "Idle"
 view_equip_anim = "Unholster"
 view_shoot_anim = "Shoot"
 view_reload_anim = "Reload"
-shoot_sound = ExtResource("3_kcpnx")
-reload_sound = ExtResource("1_vmmbf")
-unholster_sound = ExtResource("4_1wkg8")
+shoot_sound = SubResource("Resource_yua6x")
+reload_sound = SubResource("Resource_4dti6")
+unholster_sound = SubResource("Resource_tnw6o")
 damage = 25
 current_ammo = 7.0
 magazine_capacity = 7.0
 reserve_ammo = 999.0
 max_reserve_ammo = 999.0
-auto_fire = false
+auto_fire = true
 max_fire_rate_ms = 50.0

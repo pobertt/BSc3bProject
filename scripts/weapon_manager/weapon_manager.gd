@@ -5,6 +5,10 @@ extends Node3D
 
 @export var current_weapon: WeaponResource
 
+# Gun resources
+@export var p90 : WeaponResource
+@export var deagle : WeaponResource
+
 @export var player : CharacterBody3D
 @export var bullet_ray_cast_3d: RayCast3D
 
@@ -105,7 +109,7 @@ var heat : float = 0.0
 func apply_recoil():
 	var spray_recoil := Vector2.ZERO
 	if current_weapon.spray_pattern:
-		spray_recoil = current_weapon.spray_pattern.get_point_position(int(heat) % current_weapon.spray_pattern.point_count) * 0.0075
+		spray_recoil = current_weapon.spray_pattern.get_point_position(int(heat) % current_weapon.spray_pattern.point_count) * 0.002
 		print(spray_recoil)
 		print(heat)
 	var random_recoil := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 0.01
@@ -142,5 +146,8 @@ func _process(delta: float) -> void:
 		current_weapon._on_process(delta)
 	
 	# Slowly drifts it back to 0 when player isn't shooting
-	heat = max(0.0, heat - delta * 10.0)
+	if current_weapon.current_ammo == 0:
+		heat = 0.0
+	else:
+		heat = max(0.0, heat - delta * 10.0)
 	

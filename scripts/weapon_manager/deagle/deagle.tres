@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=7 format=3 uid="uid://ckkrc8102724r"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=8 format=3 uid="uid://ckkrc8102724r"]
 
 [ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_kypfg"]
 [ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="2_nmmti"]
@@ -9,6 +9,12 @@ metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-276959__gfl
 
 [sub_resource type="Resource" id="Resource_yua6x"]
 metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav"
+
+[sub_resource type="Curve2D" id="Curve2D_600h3"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0, 0, 0, 2, -5, 0, 0, 0, 0, 2, -13, 0, 0, 0, 0, 3, -28, 0, 0, 0, 0, 5, -44)
+}
+point_count = 6
 
 [sub_resource type="Resource" id="Resource_tnw6o"]
 metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav"
@@ -37,3 +43,4 @@ reserve_ammo = 999.0
 max_reserve_ammo = 999.0
 auto_fire = false
 max_fire_rate_ms = 50.0
+spray_pattern = SubResource("Curve2D_600h3")

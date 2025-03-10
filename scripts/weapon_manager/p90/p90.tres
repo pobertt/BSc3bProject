@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="WeaponResource" load_steps=6 format=3 uid="uid://cmipswqvlwsh8"]
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=7 format=3 uid="uid://cmipswqvlwsh8"]
 
 [ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_4ht4i"]
 [ext_resource type="AudioStream" uid="uid://bkdnd7l3whrp" path="res://assets/weapons_asset_pack/sounds/cc0-415912__okieactor__heathers-gunshot-effect2.wav" id="2_3t0bt"]
 [ext_resource type="AudioStream" uid="uid://counu6xs7ni2t" path="res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav" id="3_mbaej"]
 [ext_resource type="PackedScene" uid="uid://dtdrxbja0fj7j" path="res://assets/weapons_asset_pack/models/p90.glb" id="4_ci63e"]
+[ext_resource type="PackedScene" uid="uid://u64ihy23taw" path="res://scripts/weapon_manager/p90/new_packed_scene.tscn" id="5_vrrqa"]
 
 [sub_resource type="Curve2D" id="Curve2D_jtovg"]
 _data = {
@@ -14,7 +15,7 @@ point_count = 30
 [resource]
 script = ExtResource("1_4ht4i")
 view_model = ExtResource("4_ci63e")
-world_model = ExtResource("4_ci63e")
+world_model = ExtResource("5_vrrqa")
 view_model_pos = Vector3(0.5, -0.435, -0.485)
 view_model_rot = Vector3(0, 1.571, 0)
 view_model_scale = Vector3(0.16, 0.16, 0.16)

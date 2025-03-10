@@ -98,6 +98,14 @@ func _update_view_and_world_model_masks():
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	
+	#if event.is_action_pressed("gun1"):
+		#weapon_manager.current_weapon = weapon_manager.deagle
+		#weapon_manager._update_weapon_model()
+	#elif event.is_action_pressed("gun2"):
+		#weapon_manager.current_weapon = weapon_manager.p90
+		#weapon_manager._update_weapon_model()
+		
+	
 	if event is InputEventMouseMotion:
 		# Capturing the mouse to the screen.
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

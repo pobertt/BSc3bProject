@@ -25,13 +25,14 @@ func _process(delta: float) -> void:
 
 func update_health_bar(health_value):
 	health_bar.value = health_value
+	print("damage img being called")
 	damage_texture.show()
 	await get_tree().create_timer(0.5).timeout
 	damage_texture.hide()
 
 func update_hit_marker(hit):
-	print("being called")
 	if hit:
+		print("hit marker being called")
 		reticle.hide()
 		hit_marker.show()
 		await get_tree().create_timer(0.2).timeout

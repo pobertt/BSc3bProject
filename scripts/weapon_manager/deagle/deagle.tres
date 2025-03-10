@@ -35,5 +35,5 @@ current_ammo = 7.0
 magazine_capacity = 7.0
 reserve_ammo = 999.0
 max_reserve_ammo = 999.0
-auto_fire = true
+auto_fire = false
 max_fire_rate_ms = 50.0

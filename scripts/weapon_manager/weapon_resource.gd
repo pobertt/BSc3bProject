@@ -147,5 +147,4 @@ func _fire_shot():
 	current_ammo -= 1
 
 func show_hit_marker():
-	print("SHOW being called")
 	hit_marker.emit(true)

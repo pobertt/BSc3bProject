@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://ygpobru5c8pn"]
+
+[ext_resource type="Script" path="res://scripts/powerup.gd" id="1_3ysj5"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_x76g6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_no7bm"]
+points = PackedVector3Array(0, 0.5, 0.5, 0.5, -0.5, 0.5, 0, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+
+[node name="powerup" type="Area3D"]
+script = ExtResource("1_3ysj5")
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("PrismMesh_x76g6")
+
+[node name="label" type="Label3D" parent="mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0601285, 0.868892, 0)
+billboard = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_no7bm")
+
+[node name="respawn" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="respawn" to="." method="_on_respawn_timeout"]

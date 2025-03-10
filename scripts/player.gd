@@ -53,6 +53,19 @@ var current_recoil := Vector2.ZERO
 const RECOIL_APPLY_SPEED : float = 10.0
 const RECOIL_RECOVER_SPEED : float = 7.0
 
+# Powerup vars.
+var active : bool = false
+var dash_count : int = 0
+@export var dashs : int = 0
+var dash_active : bool = false
+const DASH_SPEED = 25
+@onready var cam_marker: Marker3D = $head_original_pos/head/marker
+
+var double_jump_active : bool = false
+var jump_count : int = 0
+@export var jumps : int = 1
+const JUMP_VELOCITY = 9
+
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
@@ -237,6 +250,43 @@ func update_recoil(delta: float) -> void:
 	# Clamp so recoil doesn't go crazy
 	camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
+@rpc("call_local")
+func gain_jumps(active):
+	if active == true:
+		print("double jump active")
+		double_jump_active = active
+
+@rpc("call_local")
+func gain_dash(active):
+	if active == true:
+		print("dash active")
+		dash_active = active
+
+func handle_jump():
+	if double_jump_active == true and not is_on_floor() and Input.is_action_just_pressed("jump"):
+		self.velocity.y = jump_velocity
+		double_jump_active = false
+		
+	if is_on_floor():
+		# Handle jump.
+		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
+			self.velocity.y = jump_velocity
+		jump_count = 0
+
+func check_dash():
+	if Input.is_action_just_pressed("dash"):
+		if(dash_active):
+			#$player_audios/dash.play()
+			var aim = camera.get_global_transform().basis
+			var dash_direction = Vector3()
+			dash_direction += aim.z * (cam_marker.global_position.z * -(1/ cam_marker.global_position.z))
+			dash_direction = dash_direction.normalized()
+			var dash_vector = dash_direction * DASH_SPEED
+			print(dash_vector)
+			velocity += dash_vector
+			print("dash used")
+			dash_active = false
+
 func _process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
 	
@@ -251,10 +301,9 @@ func _physics_process(delta: float) -> void:
 	
 	_handle_crouch(delta)
 	
+	handle_jump()
+	
 	if is_on_floor():
-		# Handle jump.
-		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
-			self.velocity.y = jump_velocity
 		movement_manager._handle_ground_physics(delta)
 	else:
 		movement_manager._handle_air_physics(delta)
@@ -265,6 +314,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		play_crouch_anim.rpc(is_crouched)
 		play_movement_anim.rpc()
+	
+	check_dash()
 	
 	move_and_slide()
 

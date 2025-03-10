@@ -47,6 +47,12 @@ const WORLD_MODEL_LAYER = 2
 # Spawn pos.
 var spawn_positions = [Vector3(25, 2, 0), Vector3(0, 2, 25), Vector3(0, 2, -25), Vector3(-25, 2, 0)]
 
+# Recoil vars.
+var target_recoil := Vector2.ZERO
+var current_recoil := Vector2.ZERO
+const RECOIL_APPLY_SPEED : float = 10.0
+const RECOIL_RECOVER_SPEED : float = 7.0
+
 # Setting up multiplayer authority, correspoding to correct peer_id.
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
@@ -194,6 +200,39 @@ func _recieve_damage():
 func dead():
 	var new_pos = spawn_positions.pick_random()
 	position = new_pos
+
+func add_recoil(pitch: float, yaw: float) -> void:
+	target_recoil.x += pitch
+	target_recoil.y += yaw
+
+func get_current_recoil() -> Vector2:
+	return current_recoil
+
+# Every frame recoil drifts back towards 0
+func update_recoil(delta: float) -> void:
+	# Slowly move target recoil back to 0,0
+	target_recoil = target_recoil.lerp(Vector2.ZERO, RECOIL_RECOVER_SPEED * delta)
+	
+	# Slowly move current recoil to the target recoil
+	# Save current recoil of player
+	var prev_recoil = current_recoil
+	# Move current recoil to target recoil
+	current_recoil = current_recoil.lerp(target_recoil, RECOIL_APPLY_SPEED * delta)
+	# Give us the amount of recoil this frame
+	var recoil_difference = current_recoil - prev_recoil
+	
+	# Rotate the player/camera to current recoil
+	# Rotate character body by the Yaw (horizontal movement)
+	rotate_y(recoil_difference.y)
+	# Rotate the camera by the Pitch (vertical movement)
+	camera.rotate_x(recoil_difference.x)
+	# Clamp so recoil doesn't go crazy
+	camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
+func _process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
+	
+	update_recoil(delta)
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return

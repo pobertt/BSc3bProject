@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=6 format=3 uid="uid://cmipswqvlwsh8"]
+
+[ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_4ht4i"]
+[ext_resource type="AudioStream" uid="uid://bkdnd7l3whrp" path="res://assets/weapons_asset_pack/sounds/cc0-415912__okieactor__heathers-gunshot-effect2.wav" id="2_3t0bt"]
+[ext_resource type="AudioStream" uid="uid://counu6xs7ni2t" path="res://assets/weapons_asset_pack/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav" id="3_mbaej"]
+[ext_resource type="PackedScene" uid="uid://dtdrxbja0fj7j" path="res://assets/weapons_asset_pack/models/p90.glb" id="4_ci63e"]
+
+[sub_resource type="Curve2D" id="Curve2D_jtovg"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0, 0, 0, 2, -5, 0, 0, 0, 0, 2, -13, 0, 0, 0, 0, 3, -28, 0, 0, 0, 0, 5, -44, 0, 0, 0, 0, -3, -59, 0, 0, 0, 0, -7, -72, 0, 0, 0, 0, -14, -83, 0, 0, 0, 0, -7, -92, 0, 0, 0, 0, 16, -88, 0, 0, 0, 0, 27, -91, 0, 0, 0, 0, 40, -94, 0, 0, 0, 0, 42, -97, 0, 0, 0, 0, 35, -98, 0, 0, 0, 0, 28, -98, 0, 0, 0, 0, 26, -97, 0, 0, 0, 0, 23, -99, 0, 0, 0, 0, 20, -97, 0, 0, 0, 0, 13, -102, 0, 0, 0, 0, 5, -107, 0, 0, 0, 0, -7, -106, 0, 0, 0, 0, -10, -107, 0, 0, 0, 0, -12, -109, 0, 0, 0, 0, -12, -106, 0, 0, 0, 0, -14, -100, 0, 0, 0, 0, -17, -102, 0, 0, 0, 0, -19, -105, 0, 0, 0, 0, -22, -108, 0, 0, 0, 0, -25, -102)
+}
+point_count = 30
+
+[resource]
+script = ExtResource("1_4ht4i")
+view_model = ExtResource("4_ci63e")
+world_model = ExtResource("4_ci63e")
+view_model_pos = Vector3(0, 0, 0)
+view_model_rot = Vector3(0, 0, 0)
+view_model_scale = Vector3(1, 1, 1)
+world_model_pos = Vector3(-0.017, 0.285, 0.109)
+world_model_rot = Vector3(-0.002, 2.281, 1.581)
+world_model_scale = Vector3(0.149, 0.149, 0.149)
+view_idle_anim = ""
+view_equip_anim = ""
+view_shoot_anim = ""
+view_reload_anim = ""
+shoot_sound = ExtResource("2_3t0bt")
+unholster_sound = ExtResource("3_mbaej")
+damage = 10
+current_ammo = 30.0
+magazine_capacity = 30.0
+reserve_ammo = inf
+max_reserve_ammo = inf
+auto_fire = true
+max_fire_rate_ms = 50.0
+spray_pattern = SubResource("Curve2D_jtovg")

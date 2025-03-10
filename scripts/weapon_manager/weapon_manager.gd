@@ -101,6 +101,16 @@ func _get_anim() -> String:
 	if not anim_player: return ""
 	return anim_player.current_animation
 
+var heat : float = 0.0
+func apply_recoil():
+	var spray_recoil := Vector2.ZERO
+	if current_weapon.spray_pattern:
+		spray_recoil = current_weapon.spray_pattern.get_point_position(int(heat) % current_weapon.spray_pattern.point_count) * 0.0002
+	var random_recoil := Vector2(randf_range(-1,1), randf_range(-1,1)) * 0.05
+	var recoil = spray_recoil + random_recoil
+	player.add_recoil(-recoil.y, -recoil.x)
+	heat += 1.0
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	
@@ -126,3 +136,7 @@ func _process(delta: float) -> void:
 	
 	if current_weapon:
 		current_weapon._on_process(delta)
+	
+	# Slowly drifts it back to 0 when player isn't shooting
+	heat = max(0.0, heat - delta * 10.0)
+	

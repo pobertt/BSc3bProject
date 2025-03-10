@@ -38,6 +38,8 @@ signal hit_marker(player_hit)
 @export var auto_fire: bool = true
 @export var max_fire_rate_ms: float = 50
 
+@export var spray_pattern : Curve2D
+
 const RAYCAST_DIST: float = 9999 # Too far seems to break it
 
 var weapon_manager : WeaponManager
@@ -137,7 +139,8 @@ func _fire_shot():
 		if obj is CharacterBody3D:
 			show_hit_marker()
 	
-			
+	weapon_manager.apply_recoil()
+	
 	last_fire_time = Time.get_ticks_msec()
 	current_ammo -= 1
 

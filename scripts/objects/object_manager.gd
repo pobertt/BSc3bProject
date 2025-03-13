@@ -1,7 +1,7 @@
 class_name ObjectManager
 extends RigidBody3D
 
-@export var health = 100
+@export var health = 10000
 
 @rpc("any_peer")
 func take_damage(amount: int, pt, nrml):

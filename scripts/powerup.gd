@@ -31,16 +31,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	mesh.rotation.y += 1 * delta
 
-
 func _on_body_entered(body: Node3D) -> void:
-	print("entered")
 	if type == Type.dash:
 		body.gain_dash.rpc(true)
 	elif type == Type.double_jump:
 		body.gain_jumps.rpc(true)
 	mesh.visible = false
 	respawn_timer.start()
-
 
 func _on_respawn_timeout() -> void:
 	collectable = true

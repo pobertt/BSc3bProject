@@ -13,6 +13,9 @@ signal health_changed(health_value)
 @onready var weapon_manager: WeaponManager = $weapon_manager
 @export var robot: MeshInstance3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
+@onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
+@onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 
 # Multiplayer Player ID.
 @export var player_id := 1:
@@ -70,6 +73,7 @@ const JUMP_VELOCITY = 9
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 	
+	# Setting different player colours
 	MultiplayerManager.set_colour(self)
 
 # More robust version of enabling sprint. 
@@ -87,6 +91,7 @@ func _ready():
 	# Camera is current for the correct player character.
 	camera.current = true
 	
+	# Set movement for different players (not entirely needed just cleans up the code)
 	movement_manager.init_movement_manager(self)
 
 @rpc("call_local")
@@ -118,7 +123,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		#weapon_manager.current_weapon = weapon_manager.p90
 		#weapon_manager._update_weapon_model()
 		
-	
 	if event is InputEventMouseMotion:
 		# Capturing the mouse to the screen.
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -139,16 +143,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _headbob_effect(delta: float):
 	# Gets absolute velocity. The faster we are moving, the faster our head is bobbing.
 	headbob_time += delta * self.velocity.length()
-	# Uses sine & cosine waves functions with time, to move the head up and down with time.
+	# Uses sine & cosine waves functions with time, moves the head up and down with time.
 	camera.transform.origin = Vector3(
 		cos(headbob_time * HEADBOB_FREQUENCY * 0.5) * HEADBOB_MOVE_AMOUNT,
 		sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,
 		0
 	)
-
-@onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
-@onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
-@onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 
 @onready var _original_capsule_height = $CollisionShape3D.shape.height
 func _handle_crouch(delta: float) -> void:

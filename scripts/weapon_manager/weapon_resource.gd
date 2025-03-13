@@ -131,10 +131,8 @@ func _fire_shot():
 		
 		print(obj)
 		
-		if obj is RigidBody3D:
-			obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
-		if obj.has_method("take_damage"):
-			obj.take_damage(self.damage)
+		if obj is RigidBody3D and obj.has_method("take_damage"):
+			obj.take_damage.rpc(self.damage, pt, nrml)
 		
 		if obj is CharacterBody3D and obj.has_method("_recieve_damage"):
 			obj._recieve_damage.rpc_id(obj.get_multiplayer_authority())

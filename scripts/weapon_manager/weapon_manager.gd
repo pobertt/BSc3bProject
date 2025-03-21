@@ -30,6 +30,7 @@ var current_weapon_world_model: Node3D
 func _update_weapon_model() -> void:
 	if not is_multiplayer_authority(): return
 	
+	# Bug can't see weapon until shot on deagle (need idle anim maybe?) and on alternate clients ammo count overlaps 
 	if current_weapon_view_model != null and is_instance_valid(current_weapon_view_model):
 		current_weapon_view_model.queue_free()
 		current_weapon_view_model.get_parent().remove_child(current_weapon_view_model)

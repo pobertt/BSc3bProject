@@ -20,6 +20,8 @@ func host_game() -> void:
 	
 	# Grabbing the player_spawn from the world.tscn
 	players_spawn_node = get_tree().get_current_scene().get_node("player_spawn")
+	
+	# Needs to be an array of objects for different spawn positions
 	obj_spawn_node = get_tree().get_current_scene().get_node("object_spawn")
 	
 	enet_peer.create_server(port)

@@ -61,10 +61,9 @@ func add_player(peer_id: int):
 	# Spawn location
 	players_spawn_node.add_child(player)
 
+# Removing player from game world on disconnect
 func remove_player(peer_id: int):
 	print("removed player %s" % peer_id)
-	
-	# Removing player from game world on disconnect
 	
 	var player = get_node_or_null(str(peer_id))
 	if player:

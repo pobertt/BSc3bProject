@@ -2,6 +2,7 @@ class_name Player
 extends CharacterBody3D
 
 signal health_changed(health_value)
+signal add_health(health_value)
 
 # References.
 @onready var world_model: Node3D = $world_model
@@ -16,6 +17,7 @@ signal health_changed(health_value)
 @onready var anim_player: AnimationPlayer = $world_model/desert_droid_container/desert_droid/AnimationPlayer
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
+@onready var cam_marker: Marker3D = $head_original_pos/head/marker
 
 # Multiplayer Player ID.
 @export var player_id := 1:
@@ -62,8 +64,6 @@ var dash_count : int = 0
 @export var dashs : int = 0
 var dash_active : bool = false
 const DASH_SPEED = 25
-@onready var cam_marker: Marker3D = $head_original_pos/head/marker
-
 var double_jump_active : bool = false
 var jump_count : int = 0
 @export var jumps : int = 1
@@ -73,7 +73,7 @@ const JUMP_VELOCITY = 9
 func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 	
-	# Setting different player colours
+	# Setting different player colours.
 	MultiplayerManager.set_colour(self)
 
 # More robust version of enabling sprint. 
@@ -116,7 +116,8 @@ func _update_view_and_world_model_masks():
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	
-	if event.is_action_pressed("gun1"):
+	# Weapon switching.
+	if event.is_action_pressed("gun1"): 
 		weapon_manager.current_weapon = weapon_manager.equipped_weapons[0]
 		weapon_manager._update_weapon_model()
 	elif event.is_action_pressed("gun2"):
@@ -164,6 +165,7 @@ func _handle_crouch(delta: float) -> void:
 	var translate_y_if_possible := 0.0
 	if was_crouched_last_frame != is_crouched and not is_on_floor():
 		translate_y_if_possible = CROUCH_JUMP_ADD if is_crouched else -CROUCH_JUMP_ADD
+	
 	# Make sure not to get player stuck in floor/ceiling during crouch jumps
 	if translate_y_if_possible != 0.0:
 		var result = KinematicCollision3D.new()
@@ -175,7 +177,7 @@ func _handle_crouch(delta: float) -> void:
 	# Also for camera smoothing.
 	head.position.y = move_toward(head.position.y, -CROUCH_TRANSLATE if is_crouched else 0, 7.0 * delta)
 	
-	# For crouch visuals.
+	# For 3rd person crouch visuals.
 	#$world_model/desert_droid_container.mesh.height = $CollisionShape3D.shape.height
 	#$world_model/desert_droid_container.position.y = $CollisionShape3D.position.y
 
@@ -219,13 +221,16 @@ func _recieve_damage():
 	health_changed.emit(health)
 
 func dead():
+	# Setting new position when health = 0
 	var new_pos = spawn_positions.pick_random()
 	position = new_pos
 
+# Recoil for gun.
 func add_recoil(pitch: float, yaw: float) -> void:
 	target_recoil.x += pitch
 	target_recoil.y += yaw
 
+# The guns current recoil.
 func get_current_recoil() -> Vector2:
 	return current_recoil
 
@@ -252,17 +257,27 @@ func update_recoil(delta: float) -> void:
 
 @rpc("call_local")
 func gain_jumps(active):
+	# Setting double jump powerup.
 	if active == true:
 		print("double jump active")
 		double_jump_active = active
 
 @rpc("call_local")
 func gain_dash(active):
+	# Setting dash powerup.
 	if active == true:
 		print("dash active")
 		dash_active = active
 
+@rpc("call_local")
+func gain_health(active):
+	# Adding health.
+	if active == true and health < 100:
+		health = health + 25
+		add_health.emit(health)
+
 func handle_jump():
+	# Allows another jump if the powerup is active
 	if double_jump_active == true and not is_on_floor() and Input.is_action_just_pressed("jump"):
 		self.velocity.y = jump_velocity
 		double_jump_active = false
@@ -271,6 +286,7 @@ func handle_jump():
 		# Handle jump.
 		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
 			self.velocity.y = jump_velocity
+		# Resets to 0 when jumps are used.
 		jump_count = 0
 
 func check_dash():
@@ -279,11 +295,15 @@ func check_dash():
 			#$player_audios/dash.play()
 			var aim = camera.get_global_transform().basis
 			var dash_direction = Vector3()
+			
+			# Dashes towards the direction the cam_marker is pointing towards.
 			dash_direction += aim.z * (cam_marker.global_position.z * -(1/ cam_marker.global_position.z))
 			dash_direction = dash_direction.normalized()
+			
+			# Setting the dash speed.
 			var dash_vector = dash_direction * DASH_SPEED
-			print(dash_vector)
 			velocity += dash_vector
+			# Resetting the dash
 			print("dash used")
 			dash_active = false
 
@@ -299,6 +319,7 @@ func _physics_process(delta: float) -> void:
 	# Depending on which way you have your character facing, you may have to negate the input directions.
 	movement_manager.wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
 	
+	# Handling all player movement functions.
 	_handle_crouch(delta)
 	
 	handle_jump()

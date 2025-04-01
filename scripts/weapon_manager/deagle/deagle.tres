@@ -1,14 +1,10 @@
 [gd_resource type="Resource" script_class="WeaponResource" load_steps=8 format=3 uid="uid://ckkrc8102724r"]
 
 [ext_resource type="Script" path="res://scripts/weapon_manager/weapon_resource.gd" id="1_kypfg"]
+[ext_resource type="AudioStream" uid="uid://d3vi2o7bmt2yc" path="res://assets/weapons_asset_pack/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3" id="1_wbofs"]
 [ext_resource type="PackedScene" uid="uid://ch71iayrvons6" path="res://assets/weapons_asset_pack/models/deagle.glb" id="2_nmmti"]
+[ext_resource type="AudioStream" uid="uid://bkdnd7l3whrp" path="res://assets/weapons_asset_pack/sounds/cc0-415912__okieactor__heathers-gunshot-effect2.wav" id="2_udl70"]
 [ext_resource type="PackedScene" uid="uid://dk10ly8dtqcf6" path="res://assets/weapons_asset_pack/models/deagle - viewmodel.glb" id="3_eh86w"]
-
-[sub_resource type="Resource" id="Resource_4dti6"]
-metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3"
-
-[sub_resource type="Resource" id="Resource_yua6x"]
-metadata/__load_path__ = "res://assets/weapons_asset_pack/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav"
 
 [sub_resource type="Curve2D" id="Curve2D_600h3"]
 _data = {
@@ -33,8 +29,8 @@ view_idle_anim = "Idle"
 view_equip_anim = "Unholster"
 view_shoot_anim = "Shoot"
 view_reload_anim = "Reload"
-shoot_sound = SubResource("Resource_yua6x")
-reload_sound = SubResource("Resource_4dti6")
+shoot_sound = ExtResource("2_udl70")
+reload_sound = ExtResource("1_wbofs")
 unholster_sound = SubResource("Resource_tnw6o")
 damage = 25
 current_ammo = 7.0

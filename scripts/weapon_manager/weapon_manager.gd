@@ -62,6 +62,8 @@ func _update_weapon_model() -> void:
 		
 		current_weapon.is_equipped = true
 		
+		current_weapon._on_equip()
+		
 		if player.has_method("_update_view_and_world_model_masks"):
 			player._update_view_and_world_model_masks()
 

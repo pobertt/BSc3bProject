@@ -81,7 +81,6 @@ func _on_trigger_up():
 
 func _on_equip():
 	# Playing anims for equipping the weapon.
-	print("ur mum")
 	weapon_manager._play_anim(view_equip_anim)
 	weapon_manager._queue_anim(view_idle_anim)
 

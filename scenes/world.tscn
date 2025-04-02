@@ -59,23 +59,83 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="powerup" parent="." instance=ExtResource("5_oqu2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.106229, 1.02603, -4.76175)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.07897, 4.85385, -5.03994)
 collision_layer = 3
 collision_mask = 3
 qty = 1
 
 [node name="powerup2" parent="." instance=ExtResource("5_oqu2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3368, 1.02603, -4.76175)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.99085, 4.75311, 5.01561)
+collision_layer = 3
+collision_mask = 3
+qty = 1
+
+[node name="powerup3" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.10099, 4.85025, -5.03309)
+collision_layer = 3
+collision_mask = 3
+qty = 1
+
+[node name="powerup4" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.80004, 4.75311, 5.01561)
+collision_layer = 3
+collision_mask = 3
+qty = 1
+
+[node name="powerup5" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.3347, 2.87921, 28.2102)
+collision_layer = 3
+collision_mask = 3
+type = 2
+qty = 1
+
+[node name="powerup6" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.3347, 2.87921, -28.3396)
+collision_layer = 3
+collision_mask = 3
+type = 2
+qty = 1
+
+[node name="powerup7" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.0401, 2.87921, -28.3396)
+collision_layer = 3
+collision_mask = 3
+type = 2
+qty = 1
+
+[node name="powerup8" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.0401, 2.87921, 27.8948)
+collision_layer = 3
+collision_mask = 3
+type = 2
+qty = 1
+
+[node name="powerup9" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.0401, 2.87921, 0.415375)
 collision_layer = 3
 collision_mask = 3
 type = 1
 qty = 1
 
-[node name="powerup3" parent="." instance=ExtResource("5_oqu2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.24048, 1.02603, -4.76175)
+[node name="powerup10" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.9265, 2.87921, 0.415375)
 collision_layer = 3
 collision_mask = 3
-type = 2
+type = 1
+qty = 1
+
+[node name="powerup11" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.333355, 2.87921, 28.28)
+collision_layer = 3
+collision_mask = 3
+type = 1
+qty = 1
+
+[node name="powerup12" parent="." instance=ExtResource("5_oqu2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.333355, 2.87921, -27.6302)
+collision_layer = 3
+collision_mask = 3
+type = 1
 qty = 1
 
 [connection signal="pressed" from="CanvasLayer/main_menu/mainmenu_panel/MarginContainer/VBoxContainer/host_game" to="game_manager" method="host_game"]

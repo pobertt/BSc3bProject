@@ -279,7 +279,7 @@ func gain_health(active):
 func handle_jump():
 	# Allows another jump if the powerup is active
 	if double_jump_active == true and not is_on_floor() and Input.is_action_just_pressed("jump"):
-		self.velocity.y = jump_velocity
+		self.velocity.y = jump_velocity * 1.5
 		double_jump_active = false
 		
 	if is_on_floor():

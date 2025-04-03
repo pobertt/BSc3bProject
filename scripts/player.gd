@@ -119,9 +119,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Weapon switching.
 	if event.is_action_pressed("gun1"): 
 		weapon_manager.current_weapon = weapon_manager.equipped_weapons[0]
+		print(weapon_manager.current_weapon)
 		weapon_manager._update_weapon_model()
 	elif event.is_action_pressed("gun2"):
 		weapon_manager.current_weapon = weapon_manager.equipped_weapons[1]
+		print(weapon_manager.current_weapon)
 		weapon_manager._update_weapon_model()
 		
 	if event is InputEventMouseMotion:

@@ -18,6 +18,7 @@ signal add_health(health_value)
 @onready var animation_tree : AnimationTree = $world_model/desert_droid_container/AnimationTree
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 @onready var cam_marker: Marker3D = $head_original_pos/head/marker
+@onready var muzzle_flash: GPUParticles3D = $head_original_pos/head/camera/MuzzleFlash
 
 # Multiplayer Player ID.
 @export var player_id := 1:

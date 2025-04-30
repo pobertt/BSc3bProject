@@ -122,6 +122,7 @@ func _fire_shot():
 	weapon_manager._play_sound(shoot_sound)
 	weapon_manager._play_anim(view_shoot_anim)
 	weapon_manager._queue_anim(view_idle_anim)
+	weapon_manager.muzzle_flash.rpc()
 	
 	# Sets the raycast and moves raycast based on recoil.
 	var raycast = weapon_manager.bullet_ray_cast_3d

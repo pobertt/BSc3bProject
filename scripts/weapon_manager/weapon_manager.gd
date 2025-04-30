@@ -156,6 +156,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed("reload"):
 			current_weapon._reload_pressed()
 
+@rpc("call_local")
+func muzzle_flash():
+	player.muzzle_flash.restart()
+	player.muzzle_flash.emitting = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if not is_multiplayer_authority(): return

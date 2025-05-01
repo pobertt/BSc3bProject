@@ -118,11 +118,11 @@ func _reload():
 
 # Called for each bullet shot.
 func _fire_shot():
+	
 	# Plays animations and sound.
 	weapon_manager._play_sound(shoot_sound)
 	weapon_manager._play_anim(view_shoot_anim)
 	weapon_manager._queue_anim(view_idle_anim)
-	weapon_manager.muzzle_flash.rpc()
 	
 	# Sets the raycast and moves raycast based on recoil.
 	var raycast = weapon_manager.bullet_ray_cast_3d
@@ -152,9 +152,13 @@ func _fire_shot():
 	# Applys recoil for each shot fired.
 	weapon_manager.apply_recoil()
 	
+	weapon_manager.muzzle_flash.rpc()
+	
 	# Gets last time it fired and removes 1 from current ammo.
 	last_fire_time = Time.get_ticks_msec()
 	current_ammo -= 1
+
+#Bug for auto weapons- when holding down left click it will keep the first raycast point for the first mouse click.
 
 # Displays hit_marker in hud.
 func show_hit_marker():

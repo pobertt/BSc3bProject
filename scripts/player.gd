@@ -117,6 +117,9 @@ func _update_view_and_world_model_masks():
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	
+	if event.is_action_pressed("shoot"):
+		shoot_animation.rpc()
+	
 	# Weapon switching.
 	if event.is_action_pressed("gun1"): 
 		weapon_manager.current_weapon = weapon_manager.equipped_weapons[0]
@@ -143,6 +146,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			camera.rotate_x(-event.relative.y * look_sensitivity)
 			# Limited to looking down to feet and up to the sky. Otherwise it would rotate forever (back/frontflips)
 			camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
+
+@rpc("call_local")
+func shoot_animation():
+	anim_player.stop()
+	anim_player.play("PistolShoot")
 
 func _headbob_effect(delta: float):
 	# Gets absolute velocity. The faster we are moving, the faster our head is bobbing.

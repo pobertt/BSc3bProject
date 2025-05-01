@@ -117,7 +117,7 @@ func _update_view_and_world_model_masks():
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	
-	if event.is_action_pressed("shoot"):
+	if event.is_action_pressed("shoot") or weapon_manager.current_weapon.auto_fire == true:
 		shoot_animation.rpc()
 	
 	# Weapon switching.

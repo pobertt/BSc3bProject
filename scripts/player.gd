@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody3D
 
+#BUGS NEEDING A FIX: WEAPONS CHANGING / AMMO OVERLAP, HEALTH OVERLAP, DAMAGE BASED ON WHICH PLAYER IT IS
+
 signal health_changed(health_value)
 signal add_health(health_value)
 
@@ -19,6 +21,7 @@ signal add_health(health_value)
 @onready var state_machine_playback : AnimationNodeStateMachinePlayback = $world_model/desert_droid_container/AnimationTree.get("parameters/playback")
 @onready var cam_marker: Marker3D = $head_original_pos/head/marker
 @onready var muzzle_flash: GPUParticles3D = $head_original_pos/head/camera/MuzzleFlash
+@onready var hud: HUD = $CanvasLayer/HUD
 
 # Multiplayer Player ID.
 @export var player_id := 1:
@@ -94,6 +97,7 @@ func _ready():
 	
 	# Set movement for different players (not entirely needed just cleans up the code)
 	movement_manager.init_movement_manager(self)
+	hud.init_hud_manager(self)
 
 @rpc("call_local")
 func _update_view_and_world_model_masks():
@@ -225,6 +229,7 @@ func _recieve_damage():
 	if not is_multiplayer_authority(): return
 	
 	health -= weapon_manager.current_weapon.damage
+	print("damage: ", weapon_manager.current_weapon.damage)
 	print(health)
 	if health <= 0:
 		health = 100

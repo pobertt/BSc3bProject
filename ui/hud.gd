@@ -1,3 +1,4 @@
+class_name HUD
 extends Control
 
 @export var player : Player
@@ -7,6 +8,9 @@ extends Control
 @onready var damage_texture: TextureRect = $hurt_img
 @onready var hit_marker: TextureRect = $hit_marker
 @onready var reticle: ColorRect = $reticle
+
+func init_hud_manager(new_player: Player) -> void:
+	player = new_player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -24,11 +28,14 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if weapon_manager.current_weapon:
-		label.text = str(weapon_manager.current_weapon.current_ammo) + " / " + str(weapon_manager.current_weapon.reserve_ammo)
+	if not is_multiplayer_authority(): return
+	
+	update_ammo()
 
 # Called when player is damaged. Showing the red tint around the screen.
 func update_health_bar(health_value):
+	if not is_multiplayer_authority(): return
+	
 	health_bar.value = health_value
 	print("damage img being called")
 	damage_texture.show()
@@ -37,10 +44,14 @@ func update_health_bar(health_value):
 
 # Called when player picks up the Health powerup.
 func add_health_bar(health_value):
+	if not is_multiplayer_authority(): return
+	
 	health_bar.value = health_value
 
 # Called when shooting at an enemy. Showing the hitmarker icon.
 func update_hit_marker(hit):
+	if not is_multiplayer_authority(): return
+	
 	if hit:
 		print("hit marker being called")
 		reticle.hide()
@@ -49,3 +60,9 @@ func update_hit_marker(hit):
 		hit == false
 		reticle.show()
 		hit_marker.hide()
+
+func update_ammo():
+	if not is_multiplayer_authority(): return
+	
+	if weapon_manager.current_weapon:
+		label.text = str(weapon_manager.current_weapon.current_ammo) + " / " + str(weapon_manager.current_weapon.reserve_ammo)

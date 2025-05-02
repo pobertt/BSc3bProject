@@ -1,7 +1,7 @@
 class_name Player
 extends CharacterBody3D
 
-#BUGS NEEDING A FIX: WEAPONS CHANGING / AMMO OVERLAP, HEALTH OVERLAP, DAMAGE BASED ON WHICH PLAYER IT IS
+#BUGS NEEDING A FIX: DAMAGE BASED ON WHICH PLAYER IT IS
 
 signal health_changed(health_value)
 signal add_health(health_value)

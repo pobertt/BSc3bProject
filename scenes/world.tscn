@@ -31,8 +31,9 @@ shadow_enabled = true
 
 [node name="DemoMap" parent="." instance=ExtResource("3_iwupb")]
 
-[node name="game_manager" type="Node" parent="."]
+[node name="game_manager" type="Node" parent="." node_paths=PackedStringArray("ip")]
 script = ExtResource("1_n8uf6")
+ip = NodePath("../CanvasLayer/main_menu/mainmenu_panel/MarginContainer/VBoxContainer/IP")
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")

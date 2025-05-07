@@ -6,7 +6,7 @@ var obj_scene = preload("res://scenes/objects/object.tscn")
 
 # Open Port number and IP address for clients
 const port = 9999
-const server_ip = "127.0.0.1" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com".0
+var server_ip = "" #127.0.0.1 and use host buttons for debug purposes and when cloud server is on do amazon link like: "ec2-51-20-120-25.eu-north-1.compute.amazonaws.com".0
 
 # Created MultiplayerPeer object
 var enet_peer = ENetMultiplayerPeer.new()
@@ -28,8 +28,11 @@ func host_game() -> void:
 	obj_spawn_node = get_tree().get_current_scene().get_node("object_spawn")
 	
 	# Create server
+	enet_peer.set_bind_ip(server_ip)
 	enet_peer.create_server(port)
+	
 	multiplayer.multiplayer_peer = enet_peer
+	
 	
 	# Connecting add_player() and remove_player() functions for peer connected/disconnected signals
 	multiplayer.peer_connected.connect(add_player)
@@ -47,6 +50,7 @@ func join_game() -> void:
 	
 	# Create client
 	var client_peer = enet_peer
+	print("MultiplayerManager Join Game: ", server_ip)
 	client_peer.create_client(server_ip, port)
 	multiplayer.multiplayer_peer = client_peer
 

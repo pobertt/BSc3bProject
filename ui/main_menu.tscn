@@ -38,3 +38,11 @@ text = "Host Game
 [node name="join_game" type="Button" parent="mainmenu_panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Join Game"
+
+[node name="IP" type="LineEdit" parent="mainmenu_panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "10.9.70.183"
+placeholder_text = "PUT YOUR IP HERE
+"

@@ -28,7 +28,6 @@ func host_game() -> void:
 	obj_spawn_node = get_tree().get_current_scene().get_node("object_spawn")
 	
 	# Create server
-	server_ip = get_local_ip()
 	print(server_ip)
 	enet_peer.set_bind_ip(server_ip)
 	enet_peer.create_server(port)
@@ -90,10 +89,3 @@ func set_colour(player):
 func obj_spawn():
 	var test_obj = obj_scene.instantiate()
 	obj_spawn_node.add_child(test_obj)
-
-func get_local_ip() -> String:
-	var local_ip = IP.get_local_addresses()
-	for ip in local_ip:
-		if ip.begins_with("192.168.") or ip.begins_with("10.") or ip.begins_with("172."):
-			return ip
-	return ""

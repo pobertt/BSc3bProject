@@ -43,6 +43,6 @@ text = "Join Game"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-text = "10.9.70.183"
+text = "127.0.0.1"
 placeholder_text = "PUT YOUR IP HERE
 "
